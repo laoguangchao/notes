@@ -1,0 +1,1778 @@
+day01 
+第一部分：AngularJS介绍以及简单使用
+1. AngularJS是什么
+	在Web开发领域，我们一般使用HTML作为前端页面元素的声明式语言，使用CSS技术作为展示样式的描述语言，Javascript作为业务处理交互的命令式语言。当我们构建非常复杂的Web应用时，纯粹而有限的HTML就显得非常不足，Javascript本身也会随着项目代码量的膨胀而难以维护和管理，研发工期和成本也会随之难以控制。这时候，我们一般使用一些类库（例如JQuery、Dojo等）或框架（例如Backbone、Ember、ExtJS等）来提升开发效率，进而降低项目的工期和成本，也方便后续的维护和管理。
+
+	而AngularJS不仅是一个理念先进（逼格高）的前端开发框架，更是一种端对端（End to End）的解决方案。AngularJS遵从架构设计中的MVC模式，提倡展现、数据和逻辑处理组件的松耦合（类似Flex和WPF）。AngularJS通过指令技术对传统HTML实现了自然扩展，通过编译技术实现了数据模型与展现视图的双向自动同步，从而消除了前端开发中繁琐复杂的DOM操作（想想看那些一片片的selector）。最后再通过模块化设计解决了JS代码管理维护和按需加载的问题，解放了广大前端程序员（以及后端程序员）同胞完成前端开发任务的生产力。而且这种解耦本身，也对前端的自动化测试技术提供了良好的支持。
+	AngularJS下载
+	https://docs.angularjs.org/
+		docs	文档
+		i18n	国际化
+		*.js 	AngularJS代码库以及其他模块库
+
+	参考链接：
+		http://stackoverflow.com/questions/14994391/thinking-in-angularjs-if-i-have-a-jquery-background
+		http://docs.ngnice.com/guide/
+2. AngularJS特点
+	1) 上手简单：
+		通过学习AngularJS的一些概念和常见用法，即可在不需要大量了解DOM操作的情况下开发前端Web应用。
+	2) 开发效率：
+		一方面AngularJS相对于传统前端开发能减少大量的操作代码（双向绑定、自动注入），另一方面也通过前后端分离、合理的模块化组织项目结构降低了耦合、使开发者更关注于每一个具体的逻辑本身，从而加快了开发速度，也利于提升系统的质量。
+	3) 运行效率：
+		纯静态化便于前后端的缓存优化，按需加载也降低服务端IO的压力。当然不得不提的是，如果双向绑定的数据对象数据过多，比如多于2000个，会导致浏览器页面的渲染速度较慢。对于这一点，由于一页内展示可见的区域有限、并且用户一个时间点能关注内容也有限，我们一般可以采用数据分页加载等方式降低一次绑定的数据对象数量。
+	4) 适用范围：
+		我们知道软件领域没有银弹，没有一种东西能解决一个大领域里的所有问题。所以，AngularJS也有自己的适用范围。比如像Web游戏、在线图形编辑等这些需要频繁操作DOM的前端，就不适合用AngularJS来开发。一般来说，AngularJS特别适合基于CRUD的业务系统Web应用的前端开发，而且幸运的是目前这个地球上绝大部分的Web应用是这种。
+
+3. AngularJS历史
+	AngularJS最初由Misko Hevery和Adam Abrons于2009年开发，后来成为了Google公司的项目。后来Abrons离开了AngularJS，但在Google工作的MiskoHevery和谷歌员工Igor Minar和Vojta Jina等继续开发和维护这个库。创始人MiskoHevery加入Google公司之前，曾在Intel、Xerox（施乐）、Sun和Adobe公司工作过，主要从事数据库/后端方面的工作。加入Google公司后，MiskoHevery开始转向自动化测试，AngularJS这项工作的主要目的是改进Google的开发者工作效率，从而改善代码库。
+
+	AngularJS的起源还有个有趣的小故事。最开始的时候，Misko Hevery和Adam Abrons搞了一个做在线JSON存储服务的网站“GetAngular.com”，AngularJS就是为了这个项目开发的。虽然这个项目有了一些注册用户，但是两人还是决定把AngularJS作为一个开源库发行。2010年的时候，Misko Hevery参与Google Feedback项目。项目团队使用GWT进行开发，在花了6个月的时候以后，编写了17000行代码。随后，Misko Hevery花了3周将这17000行代码的程序使用AngularJS重写，结果是压缩成了令人吃惊的1500行，不到原来的十分之一。这引起了Google的重视，公司也开始资助其团队全职从事开发AngularJS。后来的事儿，大家都知道了。AngularJS越来越火，有了更多的支持，吸引了来自全球的千百名开源爱好者为AngularJS项目做出了贡献。随着项目的发展和广泛的传播，越来越多的开发者在自己的项目中选择使用AngularJS，学习和使用AngularJS已经成为了前端开发中的一股潮流。
+
+4. AngularJS核心特性–JS的四个现代化
+	1) MVC模式
+		MVC全称是Model View Controller，即模型(model)－视图(view)－控制器(controller)的缩写，即在项目设计和代码结构里把业务和控制逻辑、数据模型、界面展示这三部分解耦，方便各部分单独编写和维护，而且在数据和界面发生变化时，对业务和控制逻辑影响最小，有时候甚至时不需要重新编写业务和控制逻辑。由于有这样的优点，MVC很快被广泛应用到各种不同平台上的带有业务处理的图形化用户界面中。
+
+		模型（Model）
+			数据模型层，负责程序中数据逻辑的部分，一般主要是读写数据库。这一块对终端用户是不可见的。
+		视图（View）
+			视图展示层，负责将数据以交互界面的形式展现为终端用户，视图一般是基于数据模型来组织的。这一块是软件中终端用户可以看到和操作的部分，比如前端开发使用HTML元素来实现UI界面。
+		控制器（Controller）
+			逻辑控制层，负责处理业务逻辑和控制逻辑，处理视图里的数据输入，向模型层发送数据，从模型层获取数据，将数据传递到视图层进行展示等等。一般来说控制器充当模型和视图的黏合剂角色。
+
+		MVC特点
+			职责清晰：MVC模式将原来都混在一起的复杂代码逻辑按不同的职责拆解成三个不同的部分，每一部分的职责和功能都相对单一，便于独立的设计和实现。
+
+				代码分层模块化：我们知道将一个系统按业务功能竖向划分，就产生了不同的业务模块。而在同一个模块内，基于职责的横向拆解，项目代码结构就实现了分层的模块化（即我们常说的项目三层架构，3-Tier Architecture）。在这样的横切竖割以后，整个复杂的项目就被分解成了一个个非常小的模块结构，使得项目研发工作的计划安排和管理都很方便。
+			
+			耦合性低：将项目代码结构拆解到非常小的粒度以后，各个小的模块结构间依赖性降低，从而整个项目就降低了耦合性，整体复杂性也随之降低了。
+			
+			可重用性高：每个模块独立出来以后，抽象性更高，复用的可能性就更高。例如以前某个业务A中数据处理的代码都更界面UI的代码写在一起，除非其他模块B的数据和界面都跟一模一样才能复用业务A的这一块代码。现在我们把业务A按照MVC都拆解开以后，只要业务B的数据模型用的还是业务A背后的数据模型D，我们就可以在实现业务B的时候，把数据模型D复用、而不是重新写一遍。同理，视图层的一些表单经常也可以复用到不同的业务模块中去。
+			
+			可维护性高：代码干净了，不拖泥带水，发生变更时影响的范围最小，方便维护。结构清晰了，每块代码写到相应的目录结构下，有利于整个团队的项目大规模协同工作，同时新人加入团队或是新的团队接手项目，都会比较顺利。
+			
+			研发成本低：由于以上的优势，在项目规模比较大，UI和逻辑都相对复杂的情况下，MVC模式能明显地降低研发成本。
+
+	2) 模块化
+		在C++、Java里，我们通过Namespace、Package的方式隔离开了相同类名的类，而在Python里，我们可以进一步的使用Module来聚合一定功能的代码。这些设计使得我们可以按照自己的需要放置某些类在同样的一个层级组织之下。在AngularJS里，我们也可以显式的定义一个模块（Module），然后将某个功能模块的所有逻辑代码（函数、变量等），按照一定的规则和结构封装到这个Module中，从而规范了项目结构的组织方式，同时也避免了全局环境污染。
+
+		大家在开始学习时可能会觉得AngularJS中有很多概念，有Module、有Directive、有Service、有Filter等等。大家一定要抓住一个点，一切都是从Module开始的。开始使用AngularJS开发时，要先考虑Module，只有先有了一个Module，才能在模式上调用Service、调用Directive等。这就是为什么AngularJS中Module很重要的原因。
+
+	3) 指令系统
+		指令系统（Directive）可以说是AngularJS中最有特色、最吸引人的功能特性。
+		正常的html里写hello标签是不会被浏览器处理的，而在AngularJS里这么写就可以实现自定义的标签处理实现指令系统，这就像是JSP技术里的标签库。这样我们可以根据自己的需要，封装出来很多功能组件，做一大堆指令在需要的时候调用。
+
+	4) 双向数据绑定
+		AngularJS的第四个核心特性就是双向数据绑定，就是说数据模型层的变量可以绑定到前端视图层的内容上、前端视图层的内容上的数据也可以自动同步到数据模型层中去。目前大部分前端框架都只是实现了单向的数据绑定，比如jQueryUI、BackBone、Flex等。这也是吸引很多人使用AngularJS的一个重要原因。
+
+		AngularJS认为视图和模型应该是绑定在一起的：当视图发生变化的时候，模型也自动发生变化；当模型发生变化的时候，视图自动会刷新显示新的内容。很显然这里需要借助一个事件机制来实现双方的协调一致。AngularJS一直监听数据和视图的变动事件，并在事件发生时将一方的变动内容同步到另一方，从而实现动态的、局部的、实时的刷新。一般情况下，我们在视图层使用表单收集用户录入的数据，所以表单这种视图是最容易发生变化的。
+
+		单向绑定
+		开发者将模板和数据合并起来加入到视图中去。合并完成之后，任何对数据模型或者相关内容的改变都不会自动反映到视图中去。更糟的是，用户对视图的任何改变也不会自动同步到数据模型中来。这意味着，开发者需要编写代码来保持视图与模板、模板与视图的同步。
+		模板和数据	--------->	视图
+
+		双向绑定
+		任何视图中的改变都会立刻反映到数据模型中去，任何数据模型的改变都会传播到视图中去
+		模板和数据	<-------->	视图
+
+		在Angular网页应用中，采用的是数据的双向绑定。Angular的实现方式允许你把应用中的模型看成单一数据源。而视图始终是数据模型的一种展现形式。当模型改变时，视图就能反映这种改变，反之亦然。
+
+5. HelloWorld编写
+
+	<!DOCTYPE html>
+	<html lang="en" ng-app="app">
+	<head>
+	    <meta charset="UTF-8">
+	    <!--导入AngularJS库文件-->
+	    <script type="text/javascript" src="angular-1.3.6/angular.min.js"></script>
+	    <title>HelloWorld</title>
+	    <script type="text/javascript">
+	    	<!--初始化模块-->
+	        var AppModel = angular.module("app",[]);
+
+	        <!--创建控制器-->
+	        AppModel.controller("OneController",function($scope){
+	        	$scope.msg = "hello World"
+	        });
+	    </script>
+	</head>
+	<body ng-controller="OneController">
+	    {{msg}}
+	</body>
+	</html>
+
+6. 推荐项目结构
+	app
+		css
+		framework
+		imgs
+		js
+			app.js
+			controllers.js
+			directives.js
+			filters.js
+			services.js
+		tpls
+			a.html
+			b.html
+		index.html
+
+
+7. jQuery VS AngularJS
+	1) 不要先设计页面，然后再使用DOM操作来改变它的展现
+		jQuery是dom驱动，AngularJS是数据驱动，在jQuery中，你通常会设计一个页面，然后再给它动态效果。这是因为jQuery的设计就是为了扩充DOM并在这个简单的前提下疯狂的生长的。但是在AngularJS里，必须从头开始就在头脑中思考架构。必须从你想要完成的功能开始，然后设计应用程序，最后来设计视图，而非“我有这么一个DOM片段，我想让他可以实现XXX效果”。
+	2) 不要用AngularJS来加强jQuery
+		当你选择解决方案时，首先“think in AngularJS”；如果想不出一个解决方案，去社区求助；如果还是没有简单的解决方案，再考虑使用jQuery。但是不要让jQuery成为你的拐杖，导致你永远无法真正掌握AngularJS。
+	3) 总是以架构的角度思考
+		首先要知道Single-page应用是应用，不是网页。所以我们除了像一个客户端开发者般思考外，还需要像一个服务器端开发者一样思考。我们必须考虑如何把我们的应用分割成独立的，可扩展且可测试的组件
+	4) 概念上，Directives并不是打包的jQuery
+		AngularJS拥有一整套工具使这个过程非常简单;有了ngClass我们可以动态地更新class；ngBind使得我们可以做双向数据绑定。ngShow和ngHide可编程地展示和隐藏一个元素；以及更多地 —— 包括那些我们自己写的。换句话说，我们可以做到任何DOM操作能实现的特性。DOM操作越少，directive就越容易测试，也越容易给它们添加样式，在未来也越容易拥抱变化，并且更加的可复用和发布。Directive实际是HTML的扩展。如果HTML没有做你需要它做的事情，你就写一个directive来实现，然后就像使用HTML一样使用它。
+
+8. 数据绑定
+	1) 通过表达式来绑定
+		AngularJS 使用表达式把数据绑定到 HTML。
+		表达式使用"{{}}"来表示，AngularJS表达式很像JavaScript表达式：它们可以包含文字、运算符和变量。但是AngularJS表达式不支持条件判断，循环及异常。
+
+		app.controller("oneCtrl",function($scope){
+			$scope.person = {
+				name:"terry",
+				age:12,
+				friends:["larry","tom","jacky"]
+			}
+		});
+
+		<div>{{"姓名："+person.name+",年龄："+person.age}}</div>
+
+	2) 通过数据绑定指令来绑定
+		ng-bind
+			为一个html元素绑定innerText属性
+		ng-model
+			双向数据绑定,常用于表单元素（input,textarea,select）
+			数据模型的属性上的变化被传播到所有的相关绑定上，以保证在整个应用中保持同步。
+	3） 通过模板指令来绑定
+		AngularJS提供了一组可用模板生成HTML元素的指令，使得数据集合能够方便绑定到模板中
+		
+		1. ng-repeat
+			ngrepeat实例化一个模板集合中的每项。每个模板实例都有其自己的scope，其中给定的循环变量设置为当前集合项目，并将$index为项目索引。
+			<li ng-repeat="name in person.friends">{{name}}</li>
+			属性：
+				$index 	循环的索引值
+				$first 	是否第一次循环
+				$middle 是否第一次和最后一次循环之间的循环。
+				$last 	是否最后一次循环。
+				$even 	是否循环的次数$index为偶数。
+				$odd 	是否循环的次数$index为奇数 
+
+				<ul>
+		            <li ng-repeat="name in data.arr">{{$index+name}}</li>
+		        </ul>
+
+		2. ng-switch
+			ngSwitch指令包含ng-switch、ng-switch-when、ng-switch-default功能类似switch，ng-switch指要判断的值，ng-switch-when指条件条件符合将显示这个dom元素， ng-switch-default指条件都不符合默认显示的元素。 
+
+			<ul ng-switch="data.gender">
+	            <li ng-switch-when="male">周一</li>
+	            <li ng-switch-when="female">周二</li>
+	            <li ng-switch-default>非法输入</li>
+	        </ul>
+
+
+-------------------------------------------------------------------------------------
+	$scope是一个js对象
+	$scope提供了一些工具方法 $watch $apply
+	$scope是表达式的执行环境
+	$scope是一个树形结构，与DOM标签平行，子$scope会继承父$scope的属性，一个AngularJS应用只有一个根$scope对象，一般位于ng-app上
+	$scope可以传播事件，类似DOM事件，可以广播（向下），可以发射（向上）
+
+	指令系统
+	指令就是一些附加在HTML元素上的自定义标记（例如：属性，元素，或css类），它告诉AngularJS的HTML编译器 ($compile) 在元素上附加某些指定的行为，甚至操作DOM、改变DOM元素，以及它的各级子节点。Angular内置了一整套指令，如ngBind,ngModel,和ngView。就像你可以创建控制器和服务那样，你也可以创建自己的指令来让Angular使用。当Angular启动器引导你的应用程序时，HTML编译器就会遍历整个DOM，以匹配DOM元素里的指令。
+
+	Angular提供的所有指令都支持元素名、属性。例如自定义指令my-dir
+	<my-dir></my-dir>
+	<span my-dir="exp"></span>
+
+
+
+1. 系统指令
+	ng-app
+		使用该指令自动启动一个AngularJS应用。ngapp指令指定应用程序的根元素，通常放置在网页的根元素如body或html标签。只有一个AngularJS应用可以自动引导一个HTML文档。如果ngapp指令不被放置在HTML元素上，该文件不会被编译。
+	ng-controller
+		设置对应的controller控制器，控制器对视图进行操作。
+	ng-repeat
+		ngrepeat实例化一个模板集合中的每项。每个模板实例都有其自己的scope，其中给定的循环变量设置为当前集合项目，并将$index为项目索引。
+		<li ng-repeat="name in person.friends">{{name}}</li>
+		属性：
+			$index 	循环的索引值
+			$first 	是否第一次循环
+			$middle 是否第一次和最后一次循环之间的循环。
+			$last 	是否最后一次循环。
+			$even 	是否循环的次数$index为偶数。
+			$odd 	是否循环的次数$index为奇数 
+
+			<ul>
+	            <li ng-repeat="name in data.arr">{{$index+name}}</li>
+	        </ul>
+	ng-switch
+		ngSwitch指令包含ng-switch、ng-switch-when、ng-switch-default功能类似switch，ng-switch指要判断的值，ng-switch-when指条件条件符合将显示这个dom元素， ng-switch-default指条件都不符合默认显示的元素。 
+
+		<ul ng-switch="data.gender">
+            <li ng-switch-when="male">周一</li>
+            <li ng-switch-when="female">周二</li>
+            <li ng-switch-default>非法输入</li>
+        </ul>
+    ng-model 
+    	双向数据绑定
+	ng-bind
+		www.google.com/angular.js
+		www.baidu.com
+		设置ngbind属性，angular会将ngbind的值替换掉标签的内容。通常情况下，不使用ngbind属性，而是使用双大括号{{}}。如果网速比较慢浏览加载angularjs之前会显示原始形态时，最好用ngbind来代替，因为ngbind是元素的属性，加载的时候看不到。
+	ng-bind-html
+		var app  = angular.module("app",[]);
+		app.controller("oneCtrl",function($scope){
+            $scope.data = {
+                one:'<p style="color:blue">an html<em onmouseover="this.textContent=123">click here</em>snippet</p>'
+            }
+        });
+        <div ng-controller="oneCtrl">
+	        <div ng-bind-html="data.one"></div>
+	    </div>
+
+		为了让以上内容能够运行，需要 导入angular-sanitize.js(或者.min.js)，同时还用导入一个对ngSanitize的模块依赖。有一个很重要的东西需要注意，style标签（蓝色）以及<em>标签上的onmouseover处理器都被AngulsrJS删除掉了，这是因为AngularJS认为它们是不安全的。
+		var app  = angular.module("app",["ngSanitize"]);
+	ng-bind-template
+		可以包含多个{{}}表达式
+		<div ng-bind-template="{{data.one}},{{data.two}}"></div>
+
+	ng-show 
+		用于设置应用中的一部分是否可见 。
+		ng-show="false" 可以设置 HTML 元素 不可见。
+		ng-show="true" 可以以设置 HTML 元素可见。
+	ng-hide
+		用于设置应用中的一部分是否隐藏
+	ng-blur
+		定义了 AngularJS 失去焦点事件
+	ng-focus
+		定义了 AngularJS 获得焦点事件
+	ng-submit
+		定义了 AngularJS 表单提交事件
+	ng-change
+		定义了 AngularJS model的值改变时触发的事件。
+	ng-click
+		定义了 AngularJS 单击事件。
+	ngd-blclick
+		定义了 AngularJS 双击事件。
+	ng-keydown
+		定义了 AngularJS 键盘按下事件。
+	ng-keyup
+		定义了 AngularJS 键盘抬起事件。
+	ng-keypress
+		定义了 AngularJS 按键事件。
+	ng-mousedown
+		定义了 AngularJS 鼠标按下事件。
+	ng-mouseup
+		定义了 AngularJS 鼠标抬起事件。
+	ng-mouseenter
+		定义了 AngularJS 鼠标移入事件。
+	ng-mouseleave
+		定义了 AngularJS 鼠标移开事件。
+	ng-mouseout
+		定义了 AngularJS 鼠标移开事件。
+	ng-mouseover
+		定义了 AngularJS 鼠标移入事件。
+
+2. 自定义指令
+	当你有大量代表自定义信息的模板。这个模板在你的代码中重复了很多次，当你改变一个地方的时候，你不得不在其他地方同时改动，这时候，你就要使用指令来简化你的模板。和控制器一样，指令也是注册在模块上的。要注册一个指令，你可以用module.directive API。 module.directive 接受规范化normalized的指令名字和工厂方法。此工厂方法应该返回一个带有不同选项的对象来告诉 编译器$compile此指令被匹配上该做些什么。工厂函数仅在编译器第一次匹配到指令的时候调用一次.你可以在这里进行初始化的工作。 该函数使用$injector.invoke调用，所以它可以像控制器一样进行依赖注入。
+
+	1) 简单指令(template)
+		这个例子中，我们直接在template选项项里写上模板，但是随着模板大小的增加，这样做非常不优雅。除非你的模板非常小，否则最好分割成单独的hmtl文件，然后使用templateUrl选项来加载。
+		app.directive("myFirst", function ($http,studentService) {
+            return {
+                template:studentService.students.join(".")
+            }
+        });
+
+        <div my-first="one"></div>
+    	<my-first></my-first>
+
+    2) 指令模板(templateUrl)
+    	templateUrl
+    		模板的url路径
+    	restrict可以设置指令是由属性名触发还是由元素名触发
+		    'A' - 仅匹配属性名
+		    'E' - 仅匹配元素名
+		    'AE' - 既匹配属性名又匹配元素名
+
+    	tpl1.html
+	    	<style>
+			    table{
+			        width:400px; border-collapse: collapse}
+			    th,td{
+			        border:1px solid silver;}
+			</style>
+			<table>
+			    <tr>
+			        <th>学号</th>
+			        <th>姓名</th>
+			        <th>性别</th>
+			        <th>年龄</th>
+			    </tr>
+			    <tr>
+			        <td>1001</td>
+			        <td>张三</td>
+			        <td>男</td>
+			        <td>19</td>
+			    </tr>
+			</table>
+
+		app.directive("mySecond", function () {
+            return {
+                templateUrl:"tpl1.html"
+            }
+        });
+
+    	<my-second></my-second>
+    3) 复杂指令
+    	模板中的作用域是当前控制器的作用域，如果我们想把指令的作用域与外部的作用域隔离开来，然后映射外部的作用域到指令内部的作用域。 可以通过创建独立作用域(isolate scope)来达到这个目的
+    	0.模板作用域与外部控制器作用域之间的关系：
+    		1)完全依赖，双向数据绑定
+    		2)完全不依赖 scope:{}
+    		3)部分依赖，内部依赖外部，外部不依赖内部
+    			scope:{
+    				aa:@
+    			}
+    			<directive aa="{{aa}}"></directive>
+    	1.在directive中创建隔离scope
+    		angular.module('app').controller("myController", function ($scope) {
+			    $scope.user = {
+			            id:1,
+			            name:"hello world"
+			    };
+			}).directive('isolatedScope', function () {
+			    return {
+			        scope: {},
+			        template: 'Name: {{user.name}} Street: {{user.addr}}'
+			    };
+			});
+			在指令中将不能访问控制器作用域中的user 
+    	2.隔离scope和父scope交互
+		    1) @ 绑定一个局部 scope 属性到当前 dom 节点的属性值。结果总是一个字符串，因为 dom 属性是字符串。
+		    	app.directive("mySecond", function () {
+		            return {
+		                restrict: 'AE',
+		                scope:{
+		                    msg:"@"  
+		                },
+		                template:"{{msg}}<input type='text' ng-model='msg'/>"
+		            }
+		        });
+		    	<my-second msg="hello"></my-second>
+		    	表示指令模板中的msg将与控制器中的msg属性的值进行单向数据绑定，hello为字符串
+
+		    2) = 通过 directive 的 attr 属性的值在局部 scope 的属性和父 scope 属性名之间建立双向绑定。
+		    	app.controller("twoCtrl",function($scope){
+		            $scope.msg = "hello";
+		        }).directive("mySecond", function () {
+		            return {
+		                scope: {
+		                    msg: "="
+		                },
+		                template: '内部：{{msg}} <input type="text" ng-model="msg"/>'
+		            }
+	        	});
+
+	        	<div ng-controller="twoCtrl">
+			        外部：{{msg}}<input type="text" ng-model="msg"/>
+			        <br/>
+			        <div my-second msg="msg"></div>
+			    </div>
+			    表示指令模板中的msg将与控制器中的msg属性的值进行单向数据绑定，msg为变量，指向控制器中的msg
+	
+	4) 指令中引入标签内容
+		transclude:true表示嵌入的意思，ng-transclude指明的是一个插入的位置；指令中标签里的元素都会先删除然后被嵌入包含后的内容所替换。
+
+		angular.module('app', [])
+        .controller('Ctrl', function($scope) {
+            $scope.name = 'Tobias';
+        })
+        .directive('myDialog', function() {
+            return {
+                restrict: 'E',
+                transclude: true,
+                scope: {
+                    title:"@"
+                },
+                template: '<div style="border: 1px solid black;">' +
+                            '<div style="background-color: gray"> {{title}}</div>' +
+                            '<div ng-transclude></div>' +
+                            '</div>'
+            };
+        });
+
+        <div ng-controller="Ctrl">
+	        <my-dialog title="标题：">我是文档</my-dialog>
+	    </div>
+
+
+    5) 操作DOM的指令
+		指令修改DOM通常是在link选项中，link选项接受一个带有如下签名的函数function link(scope,element,attrs) {} 其中： scope 是一个Angular的scope对象. element 指令匹配的jqLite封装的元素(angular内部实现的类jquery的库) * attrs 是一个带有规范化后属性名字和相应值的对象.
+
+
+
+
+1.过滤器介绍
+
+	1)作用：
+		过滤器用来格式化表达式中的值。它可以用在视图模板(templates)、控制器(controllers)或者服务(services)中。
+	2)使用：
+		过滤器可以应用在视图模板中的表达式中，按如下的格式：
+			{{ 表达式 | 过滤器名 }}
+			例如，在"{{ 12 | currency }}"标记中格式化了数字12作为一种货币的形式来显示，它使用了currency过滤器。格式化之后的结果是"$12.00"。 如果想要出现"￥12.00"必须导入i18n库
+
+		过滤器可以应用在另外一个过滤器的结果之上。这叫做“链式”使用，按如下格式：
+	    	{{ 表达式 | 过滤器1 | 过滤器2 | ... }}
+
+		过滤器可以拥有（多个）参数，按如下格式：
+		    {{ 表达式 | 过滤器:参数1:参数2:... }}
+		在控制器和服务中使用过滤器。在这种情况下，在你的控制器或者服务中添加以“<过滤器名>Filter”为名的依赖。
+			app.controller("oneCtrl",function ($scope,currencyFilter) {
+	            console.log(currencyFilter(12));
+	        });
+2.系统过滤器
+	1)filter
+		Selects a subset of items from array and returns it as a new array.
+		语法：
+		$filter('filter')(array, expression)
+		{{ filter_expression | filter : expression }}
+		参数：
+			filter_expression	表达式
+			filter 		过滤器
+			expression: 筛选条件
+				string: 
+					The string is used for matching against the contents of the array. All strings or objects with string properties in array that match this string will be returned. 
+				Object:
+					 A pattern object can be used to filter specific properties on objects contained by array
+				function(value, index):
+					A predicate function can be used to write arbitrary filters. The function is called for each element of array. The final result is an array of those elements that the predicate returned true for
+	2)currency
+		Formats a number as a currency (ie $1,234.56). When no currency symbol is provided, default symbol for current locale is used.
+		语法：
+		$filter('currency')(amount, symbol, fractionSize)
+		{{ currency_expression | currency : symbol : fractionSize}}
+		参数：
+			amount
+				Input to filter.
+			symbol(optional)
+				Currency symbol or identifier to be displayed.
+			fractionSize(optional)
+				Number of decimal places to round the amount to, defaults to default max fraction size for current locale
+		例如：
+			$filter('currency')(12,"*",3)	//* 12.000
+
+	3)date
+		Formats date to a string based on the requested format.
+		语法：
+			$filter('date')(date, format, timezone)
+			{{ date_expression | date : format : timezone}}
+		参数：
+			date
+				Date to format either as Date object,
+			format(optional)
+				Formatting rules (see Description). If not specified, mediumDate is used.
+			timezone(optional)
+				Timezone to be used for formatting.
+		例如：
+			$scope.date = new Date();
+			{{date|date}}	//2016年9月9日 
+	4)json
+		Allows you to convert a JavaScript object into JSON string.
+		语法：
+			$filter('json')(object)
+			{{ json_expression | json }}
+		例如：
+			$scope.model = {name:'Mike', phone:'555-4321'};
+			{{model|json}}
+			//{ "name": "Mike", "phone": "555-4321" } 
+	5) limitTo
+		Creates a new array or string containing only a specified number of elements. 
+		语法：
+			$filter('limitTo')(input, limit, begin)
+			{{ limitTo_expression | limitTo : limit : begin}}
+		参数：
+			limit 	
+				The length of the returned array or string.
+			begin(optional)
+				Index at which to begin limitation.
+		例如：
+			$scope.arr = [1,2,3,4,5,6,];
+			{{arr|limitTo:4:3}}	//[4,5,6]
+	6) lowercase
+		Converts string to lowercase.
+ 		语法：
+ 			$filter('lowercase')()
+ 			{{ lowercase_expression | lowercase}}
+ 	7) uppercase
+		Converts string to uppercase.
+		语法：
+ 			$filter('uppercase')()
+ 			{{ lowercase_expression | uppercase}}
+ 	8) orderBy
+		Orders a specified array by the expression predicate.
+		语法：
+			$filter('orderBy')(array, expression, reverse)
+			{{ orderBy_expression | orderBy : expression : reverse}}
+		参数：
+			expression
+				A predicate to be used by the comparator to determine the order of elements.
+				function: 
+					Getter function. The result of this function will be sorted using the <, ===, > operator.
+				string: 
+					An Angular expression. An expression can be optionally prefixed with + or - to control ascending or descending sort order (for example, +name or -name)
+				Array: 
+					An array of function or string predicates.
+			reverse(optional)
+				Reverse the order of the array.
+		例如：
+			{{friends | orderBy:'-name'}} 	按照名字降序排列
+	9)number(格式化数字)
+		number过滤器可以为一个数字加上千位分割，像这样，123,456,789。同时接收一个参数，可以指定小float类型保留几位小数			
+3. 自定义过滤器
+	语法:
+		app.filter("capitalize",function(){
+      		return function(input){
+      			return input[0].toUpperCase() +input.slice(1);
+      		}
+      	});
+      	格式就是这样，你的处理逻辑就写在内部的那个闭包函数中。你也可以让自己的过滤器接收参数，参数就定义在return的那个函数中，作为第二个参数，或者更多个参数也可以。
+附：
+1.日期格式
+	format string can be composed of the following elements:
+	    'yyyy': 4 digit representation of year (e.g. AD 1 => 0001, AD 2010 => 2010)
+	    'yy': 2 digit representation of year, padded (00-99). (e.g. AD 2001 => 01, AD 2010 => 10)
+	    'y': 1 digit representation of year, e.g. (AD 1 => 1, AD 199 => 199)
+	    'MMMM': Month in year (January-December)
+	    'MMM': Month in year (Jan-Dec)
+	    'MM': Month in year, padded (01-12)
+	    'M': Month in year (1-12)
+	    'dd': Day in month, padded (01-31)
+	    'd': Day in month (1-31)
+	    'EEEE': Day in Week,(Sunday-Saturday)
+	    'EEE': Day in Week, (Sun-Sat)
+	    'HH': Hour in day, padded (00-23)
+	    'H': Hour in day (0-23)
+	    'hh': Hour in AM/PM, padded (01-12)
+	    'h': Hour in AM/PM, (1-12)
+	    'mm': Minute in hour, padded (00-59)
+	    'm': Minute in hour (0-59)
+	    'ss': Second in minute, padded (00-59)
+	    's': Second in minute (0-59)
+	    'sss': Millisecond in second, padded (000-999)
+	    'a': AM/PM marker
+	    'Z': 4 digit (+sign) representation of the timezone offset (-1200-+1200)
+	    'ww': Week of year, padded (00-53). Week 01 is the week with the first Thursday of the year
+	    'w': Week of year (0-53). Week 1 is the week with the first Thursday of the year
+	    'G', 'GG', 'GGG': The abbreviated form of the era string (e.g. 'AD')
+
+	    'GGGG': The long form of the era string (e.g. 'Anno Domini')
+
+    format string can also be one of the following predefined localizable formats:
+
+	    'medium': equivalent to 'MMM d, y h:mm:ss a' for en_US locale (e.g. Sep 3, 2010 12:05:08 PM)
+	    'short': equivalent to 'M/d/yy h:mm a' for en_US locale (e.g. 9/3/10 12:05 PM)
+	    'fullDate': equivalent to 'EEEE, MMMM d, y' for en_US locale (e.g. Friday, September 3, 2010)
+	    'longDate': equivalent to 'MMMM d, y' for en_US locale (e.g. September 3, 2010)
+	    'mediumDate': equivalent to 'MMM d, y' for en_US locale (e.g. Sep 3, 2010)
+	    'shortDate': equivalent to 'M/d/yy' for en_US locale (e.g. 9/3/10)
+	    'mediumTime': equivalent to 'h:mm:ss a' for en_US locale (e.g. 12:05:08 PM)
+
+	    'shortTime': equivalent to 'h:mm a' for en_US locale (e.g. 12:05 PM)
+
+
+
+
+
+
+Services
+	Angular services are substitutable objects that are wired together using dependency injection (DI). You can use services to organize and share code across your app.
+	
+	Angular services are:
+    	1) Lazily instantiated – Angular only instantiates a service when an application component depends on it.
+    	延迟加载
+    	2) Singletons – Each component dependent on a service gets a reference to the single instance generated by the service factory.
+    	单例模式（实例，对象）
+
+1. Using Angular Service
+	1) $controller 
+		$controller service is responsible for instantiating controllers.
+		
+		$controller(constructor, locals);
+			Arguments
+				constructor 	function()/string 	
+					If called with a function then it's considered to be the controller constructor function. Otherwise it's considered to be a string which is used to retrieve the controller constructor using the following steps:
+	    			1. check if a controller with given name is registered via $controllerProvider
+	    			2. check if evaluating the string on the current scope returns a constructor
+				locals 	Object 	
+					Injection locals for Controller.
+			Returns (Object)
+				Instance of given controller.
+	2) $filter
+		Filters are used for formatting data displayed to the user.
+
+		$filter(name);
+			Arguments
+				name (String)
+				Name of the filter function to retrieve
+			Returns(Function)
+				the filter function
+		
+		$filter('currency')
+
+	3) $document
+			document Node
+		A jQuery or jqLite wrapper for the browser's window.document object.
+	4) $location
+		The $location service parses the URL in the browser address bar (based on the window.location) and makes the URL available to your application. 
+
+		Methods
+			absUrl();	
+				Return full url 
+					http://example.com/#/some/path?foo=bar&baz=xoxo
+				=> 	http://example.com/#/some/path?foo=bar&baz=xoxo
+
+			url([url]);	
+				Return url (e.g. /path?a=b#hash) when called without any parameter.
+					http://example.com/#/some/path?foo=bar&baz=xoxo
+				=>	/some/path?foo=bar&baz=xoxo
+
+			protocol();
+				Return protocol of current url.
+					http://example.com/#/some/path?foo=bar&baz=xoxo
+				=> 	http
+
+			host();
+				Return host of current url.
+					http://example.com/#/some/path?foo=bar&baz=xoxo
+				=> 	example.com
+
+			port();
+				Return port of current url.
+					http://example.com/#/some/path?foo=bar&baz=xoxo
+				=> 	80
+
+			path([path]);
+				Return path of current url when called without any parameter.
+ 					http://example.com/#/some/path?foo=bar&baz=xoxo
+ 				=> "/some/path"
+ 			search(search, [paramValue]);
+				Return search part (as object) of current url when called without any parameter.
+
+				Change search part when called with parameter and return $location.
+
+				http://example.com/#/some/path?foo=bar&baz=xoxo
+				$location.search();
+				=> {foo: 'bar', baz: 'xoxo'}
+
+				$location.search('foo', 'yipee');
+				$location.search() => {foo: 'yipee', baz: 'xoxo'}
+	5) $http(ajax)
+		The $http service is a core Angular service that facilitates communication with the remote HTTP servers via the browser's XMLHttpRequest object or via JSONP.
+
+		$http(config);
+
+		shortcut methods:
+		    $http.get(url, [config])
+		    	Relative or absolute URL specifying the destination of the request
+		    $http.post(url, data, [config]);
+		    $http.jsonp(url, [config])
+		    	Relative or absolute URL specifying the destination of the request. The name of the callback should be the string JSON_CALLBACK.
+		    	example:
+		    		'https://angularjs.org/doesntexist&callback=JSON_CALLBACK'
+		    
+		    $http.head(url, [config])
+		    $http.delete(url, [config])
+		    $http.put(url, data, [config]);
+		    $http.patch(url, data, [config]);
+
+
+		Arguments config
+    		method 	
+    			{string} 
+    			HTTP method (e.g. 'GET', 'POST','HEAD','DELETE' etc)
+    		url  	
+    			{string}  
+    			Absolute or relative URL of the resource that is being requested.
+    		params (GET)	
+    			{Object.<string|Object>}  
+    			Map of strings or objects which will be turned to ?key1=value1&key2=value2 after the url. If the value is not a string, it will be JSONified.
+    		data (POST)	
+    			{string|Object} 
+    			Data to be sent as the request message data.
+   			headers 
+   				{Object}
+   				Map of strings or functions which return strings representing HTTP headers to send to the server. If the return value of a function is null, the header will not be sent. Functions accept a config object as an argument.
+    		
+    		cache 
+    			{boolean|Cache} 
+    			If true, a default $http cache will be used to cache the GET request, otherwise if a cache instance built with $cacheFactory, this cache will be used for caching.
+
+    		timeout 
+    			{number|Promise} 
+    			timeout in milliseconds, or promise that should abort the request when resolved.
+    		responseType 
+    			{string} 
+    			
+    			"" 			DOMString (this is the default value)
+    			"document" 	Document
+				"json" 		
+							JavaScript object, parsed from a JSON string returned by the server
+				"text" 		DOMString
+
+    	Returns (HttpPromise)
+    		Returns a promise object with the standard then method and two http specific methods: success and error. The then method takes two arguments a success and an error callback which will be called with a response object. The success and error methods take a single argument - a function that will be called when the request succeeds or fails respectively. The arguments passed into these functions are destructured representation of the response object passed into the then method. The response object has these properties:
+
+		    data 
+		    	{string|Object} 
+		    	The response body transformed with the transform functions.
+		    status 
+		    	{number} 
+		    	HTTP status code of the response.
+		    headers 
+		    	{function([headerName])} 
+		    	Header getter function.
+		    config
+		    	{Object} 
+		    	The configuration object that was used to generate the request.
+		    statusText 
+		    	{string} 
+		    	HTTP status text of the response.
+	7) $rootScope
+		Every application has a single root scope. All other scopes are descendant scopes of the root scope. Scopes provide separation between the model and the view, via a mechanism for watching the model for changes.
+
+
+2. Creating Services
+	Each web application you build is composed of objects that collaborate to get stuff done. These objects need to be instantiated and wired together for the app to work. In Angular apps most of these objects are instantiated and wired together automatically by the injector service.The most verbose, but also the most comprehensive one is a Provider recipe. The remaining four recipe types — Value, Factory, Service and Constant — are just syntactic sugar on top of a provider recipe.
+
+	All services in Angular are singletons. That means that the injector uses each recipe at most once to create the object. The injector then caches the reference for all future needs.
+
+	Services can have their own dependencies. Just like declaring dependencies in a controller, you declare dependencies by specifying them in the service's factory function signature.
+
+	Angular offers several useful services (like $http), but for most applications you'll also want to create your own.
+
+
+	1) Value
+		we want to have a very simple service called "clientId" that provides a string representing an authentication id used for some remote API. You would define it like this:
+
+			var myApp = angular.module('myApp', []);
+			myApp.value('clientId', 'a12345654321x');
+
+		And this is how you would display it via Angular's data-binding:
+
+			myApp.controller('DemoController', ['clientId', function DemoController(clientId) {
+			  this.clientId = clientId;
+			}]);
+	2) Factory（工厂函数模式）
+		The Value recipe is very simple to write, but lacks some important features we often need when creating services. Let's now look at the Value recipe's more powerful sibling, the Factory. The Factory recipe adds the following abilities:
+	    	1. ability to use other services (have dependencies)
+	    	2. service initialization
+	    	3. delayed/lazy initialization
+	    The Factory recipe constructs a new service using a function with zero or more arguments (these are dependencies on other services). The return value of this function is the service instance created by this recipe.
+
+    	myApp.factory("factorial",function(number){
+    		return function foo(number){
+    			while(true){
+	    			if(number<=1){
+	    				return 1;
+	    			}else{
+	    				return number*foo(number-1)
+	    			}
+	    		}
+    		};
+    	});
+
+    	angular.module('myApp.services')
+		.factory('User', function($http) { 
+		  	var backendUrl = "http://localhost:3000";  
+		  	var service = { 
+		    	user: {},
+		    	setName: function(newName) { 
+		      		service.user['name'] = newName; 
+		    	},
+		    	setEmail: function(newEmail) {
+		      		service.user['email'] = newEmail;
+		    	},
+		    	save: function() {
+		      		return $http.post(backendUrl + '/users', {
+		        		user: service.user
+		      		});
+		    	}
+		  	};  
+		  	return service;
+		});
+
+		//注入
+		angular.module('myApp')
+		.controller('MainCtrl', function($scope, User) {
+		  	$scope.saveUser = User.save;
+		});
+
+	3) Service (构造函数模式)
+		The Service recipe produces a service just like the Value or Factory recipes, but it does so by invoking a constructor with the new operator. The constructor can take zero or more arguments, which represent dependencies needed by the instance of this type.
+
+		angular.module('myApp.services')
+		.service('User', function($http) { // injectables go here
+		  	var self = this; // Save reference
+		  	this.user = {};
+		  	this.backendUrl = "http://localhost:3000";
+		  	this.setName = function(newName) {
+		    	self.user['name'] = newName;
+		  	}
+		  	this.setEmail = function(newEmail) {
+		    	self.user['email'] = newEmail;
+		  	}
+		  	this.save = function() {
+		    	return $http.post(self.backendUrl + '/users', {
+		      		user: self.user
+		    	})
+		  	}
+		});
+		//注入
+		angular.module('myApp')
+		.controller('MainCtrl', function($scope, User) {
+		  	$scope.saveUser = User.save;
+		});
+
+	4) Provider（底层方式）
+		During application bootstrap, before Angular goes off creating all services, it configures and instantiates all providers. We call this the configuration phase of the application life-cycle. During this phase, services aren't accessible because they haven't been created yet.
+
+		Once the configuration phase is over, interaction with providers is disallowed and the process of creating services starts. We call this part of the application life-cycle the run phase.
+
+		The Provider recipe is syntactically defined as a custom type that implements a $get method. This method is a factory function just like the one we use in the Factory recipe. In fact, if you define a Factory recipe, an empty Provider type with the $get method set to your factory function is automatically created under the hood.
+
+		angular.module('myApp.services')
+		.provider('User', function() {
+		  	this.backendUrl = "http://localhost:3000";
+		  	this.setBackendUrl = function(newUrl) {
+		    	if (url) this.backendUrl = newUrl;
+		  	}
+		  	this.$get = function($http) { // injectables go here
+		    	var self = this;
+		    	var service = {
+			      	user: {},
+			      	setName: function(newName) {
+			        	service.user['name'] = newName;
+			      	},
+			      	setEmail: function(newEmail) {
+			        	service.user['email'] = newEmail;
+			      	},
+			      	save: function() {
+			        	return $http.post(self.backendUrl + '/users', {
+			          		user: service.user
+			        	})
+			      	}
+		    	};
+		    	return service;
+		  	}
+		});
+		为了给service进行配置，我们可以将provider注入到.config()方法里面
+		angular.module('myApp')
+		.config(function(UserProvider) {
+		  	UserProvider.setBackendUrl("http://myApiBackend.com/api");
+		})
+
+	5) Constant
+		Since simple values, like URL prefixes, don't have dependencies or configuration, it's often handy to make them available in both the configuration and run phases. This is what the Constant recipe is for.
+
+		myApp.constant('planetName', 'Greasy Giant');
+
+	Conclusion
+		To wrap it up, let's summarize the most important points:
+
+    	1. The injector uses recipes to create two types of objects: services and special purpose objects
+    	2. There are five recipe types that define how to create objects: Value, Factory, Service, Provider and Constant.
+    	3. Factory and Service are the most commonly used recipes. The only difference between them is that the Service recipe works better for objects of a custom type, while the Factory can produce JavaScript primitives and functions.
+    	4. The Provider recipe is the core recipe type and all the other ones are just syntactic sugar on it.
+    	5. Provider is the most complex recipe type. You don't need it unless you are building a reusable piece of code that needs global configuration.
+    	6. All special purpose objects except for the Controller are defined via Factory recipes.
+
+	    			
+3. Angular Function
+	1) angular.element			
+		Wraps a raw DOM element or HTML string as a jQuery element.
+
+		If jQuery is available, angular.element is an alias for the jQuery function. If jQuery is not available, angular.element delegates to Angular's built-in subset of jQuery, called "jQuery lite" or "jqLite."To use jQuery, simply ensure it is loaded before the angular.js file.
+
+		Angular's jqLite
+		jqLite provides only the following jQuery methods:
+
+		    addClass()
+		    after()
+		    append()
+		    attr() 
+		    	Does not support functions as parameters
+		    bind() 
+		    	Does not support namespaces, selectors or eventData
+		    children() 
+		    	Does not support selectors
+		    clone()
+		    contents()
+		    css() 
+		    	Only retrieves inline-styles, does not call getComputedStyle(). As a setter, does not convert numbers to strings or append 'px'.
+		    data()
+		    detach()
+		    empty()
+		    eq()
+		    find() 
+		    	Limited to lookups by tag name
+		    hasClass()
+		    html()
+		    next() 
+		    	Does not support selectors
+		    on() 
+		    	Does not support namespaces, selectors or eventData
+		    off() 
+		    	Does not support namespaces or selectors
+		    one() 
+		    	Does not support namespaces or selectors
+		    parent() 
+		    	Does not support selectors
+		    prepend()
+		    prop()
+		    ready()
+		    remove()
+		    removeAttr()
+		    removeClass()
+		    removeData()
+		    replaceWith()
+		    text()
+		    toggleClass()
+		    triggerHandler() 
+		    	Passes a dummy event object to handlers.
+		    unbind() 
+		    	Does not support namespaces
+		    val()
+		    wrap()
+
+
+    		controller(name) 
+    			retrieves the controller of the current element or its parent. By default retrieves controller associated with the ngController directive. If name is provided as camelCase directive name, then the controller for this directive will be retrieved (e.g. 'ngModel').
+    		injector() 
+    			retrieves the injector of the current element or its parent.
+    		scope() 
+    			retrieves the scope of the current element or its parent. Requires Debug Data to be enabled.
+    		isolateScope() 
+    			retrieves an isolate scope if one is attached directly to the current element. This getter should be used only on elements that contain a directive which starts a new isolate scope. Calling scope() on this element always returns the original non-isolate scope. Requires Debug Data to be enabled.
+    		inheritedData() 
+    			same as data(), but walks up the DOM until a value is found or the top parent element is reached.
+
+
+
+
+
+<table>
+	<thead></thead>
+	<tbody stu_tbls>
+
+	</tbody>
+</table>
+	app.directive("stuTbls",function(){
+		return {
+			template:"<tbody></tbody>"
+		}
+	});
+table
+	thead
+	tbody
+	tfoot
+	caption
+
+
+jsonp
+	http://172.16.8.45:80/index.html
+		index.html
+
+		$http.get("http://172.16.8.44:80/a.json");
+		跨域访问一次
+	jsonp
+		index.html
+			function foo(data){
+				console.log(data);
+			}
+			<script src="http://172.16.8.44:80/a.js?callback=foo"></script>
+		远程服务器
+			a.js  
+			foo("hello server data");
+		本地回调函数名 = callback值 = 返回结果调用的函数名
+		foo				foo 		foo()
+jQuery
+	$.ajax("http://172.16.8.44:80/a.ction",{
+		method:"",
+		dataType:"jsonp",
+		jsonp:"callback",
+		jsonpCallback:"foo"
+	});
+	function foo(){
+
+	}
+
+	<script src="http://172.16.8.44:80/a.action?callback=foo"></script>
+		foo();
+
+	本地回调函数 = jsonpCallback值 = 返回结果调用的函数名
+	foo				foo				foo
+
+angular 
+	$http.jsonp("http://172.16.8.44:80/a.action",{
+		params:{
+			callback:"JSON_CALLBACK"
+		}
+	}).success(function(data){
+		console.log(data);
+	});
+
+	JSON_CALLBACK();
+
+	------------------------
+	$http.jsonp("http://172.16.8.44:80/users.js");
+	foo();
+
+	users.js
+		foo([{}]);
+
+	本地函数名（windows）= callback值 =返回结果调用的函数名
+		foo				foo			foo([])
+------------------------------------------------
+服务
+	特殊功能的集合，本质就是一个对象。封装，复用
+	特点：
+		延迟加载
+			在注入的时候才会加载
+		单例（对象，实例）
+			在一个app中，只有一个服务对象
+1) 自定义服务
+	1. factory
+		工厂函数模式
+		app.factory("UserService",function($http,TeacherService){
+			//将服务对象返回
+			return {
+				getAllUsers:function(handler){
+
+				},
+				saveUser:function(user){
+
+				},
+				deleteUserById:function(id){
+
+				}
+			};
+		});
+		//使用服务
+		app.controller("mainCtrl",function(UserService,$scope){
+			UserService.getAllUsers(function(){
+
+			});
+			UserService.saveUser(user);
+		});
+
+
+	2. 构造函数模式
+		app.service("UserService2",function(){
+			this.users
+			this.getAllUsers
+		});
+	3. 常量服务
+		app.value("copyright","杰普软件");
+		app.constant("baseURL","http://172.16.8.185:8080/exam");
+
+	4. provider  提供器
+		/*
+			执行原理
+			UserService = UserServiceProvider.$get();
+		*/
+		//1. 创建服务提供器
+		app.provider("UserService",function(){
+			//构造函数模式-构造的是UserServiceProvider
+			this.url = "";
+			this.setUrl = function(url){
+				this.url = url;
+			}
+			//通过工厂函数模式创建UserService
+			this.$get = function(){
+				var self = this;//UserServiceProvider
+				//返回的对象才是UserService
+				return {
+					url:self.url
+				};
+			}
+		});
+		//2. 配置UserServiceProvider
+		app.config(function(UserServiceProvider){
+			UserServiceProvider.setUrl("http://172.16.8.185:8080");
+		});
+		//3. 注入
+		app.controller("oneCtrl",function(UserService){
+			UserService.url;
+		});
+
+		var a = /abc/ig;
+		var b = /abc/ig;
+		a === b
+		var a = new RegExp("abc",'ig');
+
+
+2) 系统服务
+		$controller	用于初始化控制器
+		$filter		用于获取过滤器
+		$document	document对应jqLite对象
+			jQuery lite = jqLite 是jQuerymini版本
+			
+			jquery.js
+			angular.js
+				angular.element() => jQuery=>$
+				var $dom = angular.element(dom)
+				$dom.on();可以使用事件代理
+
+			angular.js
+				angular.element()
+				var $dom = angular.element(dom)
+				$dom.on();
+		$location 	封装了与url相关的功能
+			$location.absUrl
+			$location.url
+			path
+			search
+			...
+		$http
+			$http(config);
+			config对象
+				method
+				url
+				params
+				data
+				headers
+				cache
+			$http()
+				方法
+				.then(function(result){
+					result.data
+				},function(result){
+					result.statusText
+				});
+				.sucess(function(data){
+
+				});
+				.error();
+				属性
+
+		$rootScope
+			根作用域
+			每个应用只有一个根作用域，其他作用域直接或者间接继承根作用域（使用原型链来继承）
+
+		$scope当前作用域
+
+		angular.controller("oneCtrl",function($scope){
+			$rootScope.root = "1001";
+			$scope.one = "1002";
+		});
+		angular.controller("twoCtrl",function($scope){
+			$scope.two = "1003";
+		});
+
+		<div ng-controller="oneCtrl">
+			<div ng-controller="twoCtrl">
+				{{two}}
+				{{one}}
+				{{root}}
+			</div>
+		</div>
+		twoCtrl $scope
+			->oneCtrl $scope
+			->$rootScope
+
+				html
+			head 	body
+			div.left 	div.right
+		div.top div.bottom
+
+------------总结----------
+自定义服务
+	service
+	factory
+	provider
+
+	value
+	constant
+系统服务
+ng中提供的方法
+	angular.isXxx
+	angular.element
+	angular.module
+	angular.copy
+	angular.extends
+	angular.merge
+	angular.forEach
+	... ...
+
+
+
+
+
+
+1. Creating Services(创建自定义服务)
+	Each web application you build is composed of objects that collaborate to get stuff done. These objects need to be instantiated and wired together for the app to work. In Angular apps most of these objects are instantiated and wired together automatically by the injector service.The most verbose, but also the most comprehensive one is a Provider recipe. The remaining four recipe types — Value, Factory, Service and Constant — are just syntactic sugar on top of a provider recipe.
+
+	All services in Angular are singletons. That means that the injector uses each recipe at most once to create the object. The injector then caches the reference for all future needs.
+
+	Services can have their own dependencies. Just like declaring dependencies in a controller, you declare dependencies by specifying them in the service's factory function signature.
+
+	Angular offers several useful services (like $http), but for most applications you'll also want to create your own.
+
+	1) Value
+		we want to have a very simple service called "clientId" that provides a string representing an authentication id used for some remote API. You would define it like this:
+
+			var myApp = angular.module('myApp', []);
+			myApp.value('clientId', 'a12345654321x');
+
+		And this is how you would display it via Angular's data-binding:
+
+			myApp.controller('DemoController', ['clientId', function DemoController(clientId) {
+			  this.clientId = clientId;
+			}]);
+	2) Factory（工厂函数模式）
+		The Value recipe is very simple to write, but lacks some important features we often need when creating services. Let's now look at the Value recipe's more powerful sibling, the Factory. The Factory recipe adds the following abilities:
+	    	1. ability to use other services (have dependencies)
+	    	2. service initialization
+	    	3. delayed/lazy initialization
+	    The Factory recipe constructs a new service using a function with zero or more arguments (these are dependencies on other services). The return value of this function is the service instance created by this recipe.
+
+    	myApp.factory("factorial",function(number){
+    		return function foo(number){
+    			while(true){
+	    			if(number<=1){
+	    				return 1;
+	    			}else{
+	    				return number*foo(number-1)
+	    			}
+	    		}
+    		};
+    	});
+
+    	angular.module('myApp.services')
+		.factory('User', function($http) { 
+		  	var backendUrl = "http://localhost:3000";  
+		  	var service = { 
+		    	user: {},
+		    	setName: function(newName) { 
+		      		service.user['name'] = newName; 
+		    	},
+		    	setEmail: function(newEmail) {
+		      		service.user['email'] = newEmail;
+		    	},
+		    	save: function() {
+		      		return $http.post(backendUrl + '/users', {
+		        		user: service.user
+		      		});
+		    	}
+		  	};  
+		  	return service;
+		});
+
+		//注入
+		angular.module('myApp')
+		.controller('MainCtrl', function($scope, User) {
+		  	$scope.saveUser = User.save;
+		});
+
+	3) Service (构造函数模式)
+		The Service recipe produces a service just like the Value or Factory recipes, but it does so by invoking a constructor with the new operator. The constructor can take zero or more arguments, which represent dependencies needed by the instance of this type.
+
+		angular.module('myApp.services')
+		.service('User', function($http) { // injectables go here
+		  	var self = this; // Save reference
+		  	this.user = {};
+		  	this.backendUrl = "http://localhost:3000";
+		  	this.setName = function(newName) {
+		    	self.user['name'] = newName;
+		  	}
+		  	this.setEmail = function(newEmail) {
+		    	self.user['email'] = newEmail;
+		  	}
+		  	this.save = function() {
+		    	return $http.post(self.backendUrl + '/users', {
+		      		user: self.user
+		    	})
+		  	}
+		});
+		//注入
+		angular.module('myApp')
+		.controller('MainCtrl', function($scope, User) {
+		  	$scope.saveUser = User.save;
+		});
+
+	4) Provider（底层方式）
+		During application bootstrap, before Angular goes off creating all services, it configures and instantiates all providers. We call this the configuration phase of the application life-cycle. During this phase, services aren't accessible because they haven't been created yet.
+
+		Once the configuration phase is over, interaction with providers is disallowed and the process of creating services starts. We call this part of the application life-cycle the run phase.
+
+		The Provider recipe is syntactically defined as a custom type that implements a $get method. This method is a factory function just like the one we use in the Factory recipe. In fact, if you define a Factory recipe, an empty Provider type with the $get method set to your factory function is automatically created under the hood.
+
+		angular.module('myApp.services')
+		.provider('User', function() {
+		  	this.backendUrl = "http://localhost:3000";
+		  	this.setBackendUrl = function(newUrl) {
+		    	if (url) this.backendUrl = newUrl;
+		  	}
+		  	this.$get = function($http) { // injectables go here
+		    	var self = this;
+		    	var service = {
+			      	user: {},
+			      	setName: function(newName) {
+			        	service.user['name'] = newName;
+			      	},
+			      	setEmail: function(newEmail) {
+			        	service.user['email'] = newEmail;
+			      	},
+			      	save: function() {
+			        	return $http.post(self.backendUrl + '/users', {
+			          		user: service.user
+			        	})
+			      	}
+		    	};
+		    	return service;
+		  	}
+		});
+
+		为了给service进行配置，我们可以将provider注入到.config()方法里面
+		angular.module('myApp')
+		.config(function(UserProvider) {
+		  	UserProvider.setBackendUrl("http://myApiBackend.com/api");
+		})
+
+	5) Constant
+		Since simple values, like URL prefixes, don't have dependencies or configuration, it's often handy to make them available in both the configuration and run phases. This is what the Constant recipe is for.
+
+		myApp.constant('planetName', 'Greasy Giant');
+
+	Conclusion
+		To wrap it up, let's summarize the most important points:
+
+    	1. The injector uses recipes to create two types of objects: services and special purpose objects
+    	2. There are five recipe types that define how to create objects: Value, Factory, Service, Provider and Constant.
+    	3. Factory and Service are the most commonly used recipes. The only difference between them is that the Service recipe works better for objects of a custom type, while the Factory can produce JavaScript primitives and functions.
+    	4. The Provider recipe is the core recipe type and all the other ones are just syntactic sugar on it.
+    	5. Provider is the most complex recipe type. You don't need it unless you are building a reusable piece of code that needs global configuration.
+    	6. All special purpose objects except for the Controller are defined via Factory recipes.
+
+	    			
+3. Angular Function
+	1) angular.element			
+		Wraps a raw DOM element or HTML string as a jQuery element.
+
+		If jQuery is available, angular.element is an alias for the jQuery function. If jQuery is not available, angular.element delegates to Angular's built-in subset of jQuery, called "jQuery lite" or "jqLite."To use jQuery, simply ensure it is loaded before the angular.js file.
+
+		Angular's jqLite
+		jqLite provides only the following jQuery methods:
+
+		    addClass()
+		    after()
+		    append()
+		    attr() 
+		    	Does not support functions as parameters
+		    bind() 
+		    	Does not support namespaces, selectors or eventData
+		    children() 
+		    	Does not support selectors
+		    clone()
+		    contents()
+		    css() 
+		    	Only retrieves inline-styles, does not call getComputedStyle(). As a setter, does not convert numbers to strings or append 'px'.
+		    data()
+		    detach()
+		    empty()
+		    eq()
+		    find() 
+		    	Limited to lookups by tag name
+		    hasClass()
+		    html()
+		    next() 
+		    	Does not support selectors
+		    on() 
+		    	Does not support namespaces, selectors or eventData
+		    off() 
+		    	Does not support namespaces or selectors
+		    one() 
+		    	Does not support namespaces or selectors
+		    parent() 
+		    	Does not support selectors
+		    prepend()
+		    prop()
+		    ready()
+		    remove()
+		    removeAttr()
+		    removeClass()
+		    removeData()
+		    replaceWith()
+		    text()
+		    toggleClass()
+		    triggerHandler() 
+		    	Passes a dummy event object to handlers.
+		    unbind() 
+		    	Does not support namespaces
+		    val()
+		    wrap()
+
+	2) angular.bind
+		angular.bind(self,fn[,args]);
+
+		Returns a function which calls function fn bound to self (self becomes the this for fn). You can supply optional args that are prebound to the function.
+		将self对象作为this绑定到fn函数中，args为fn实参
+
+			function showA(a) {
+	            alert(this.a+"-"+a);
+	        }
+	        var obj = {
+	            a:3
+	        };
+	        var foo = angular.bind(obj,showA,4);
+	        foo();
+
+	3) angular.bootstrap
+		Use this function to manually start up angular application.
+			<!doctype html>
+			<html>
+			<body>
+			<div ng-controller="WelcomeController">
+			  {{greeting}}
+			</div>
+
+			<script src="angular.js"></script>
+			<script>
+			  var app = angular.module('demo', [])
+			  .controller('WelcomeController', function($scope) {
+			      $scope.greeting = 'Welcome!';
+			  });
+			  angular.bootstrap(document, ['demo']);
+			</script>
+			</body>
+			</html>
+	4) angular.copy
+		angular.copy(source, [destination]);
+
+		Creates a deep copy of source, which should be an object or an array.
+			If no destination is supplied, a copy of the object or array is created.
+			If a destination is provided, all of its elements (for arrays) or properties (for objects) are deleted and then all elements/properties from the source are copied to it.
+
+			var obj1 = {
+	            a:3
+	        };
+	        var obj2 = {
+	            name:"terry",
+	            age:12
+	        };
+	        angular.copy(obj2,obj1);	//复制后obj1的值将被清空，填充obj2的属性以及值
+	5) angular.equals
+		Determines if two objects or two values are equivalent. Supports value types, regular expressions, arrays and objects.
+
+		Two objects or values are considered equivalent if at least one of the following is true:
+		    Both objects or values pass === comparison.
+
+		    Both objects or values are of the same type and all of their properties are equal by comparing them with angular.equals.
+
+		    Both values are NaN. (In JavaScript, NaN == NaN => false. But we consider two NaN as equal)
+
+		    Both values represent the same regular expression (In JavaScript, /abc/ == /abc/ => false. But we consider two regular expressions as equal when their textual representation matches).
+
+		    var obj1 = {
+	            name:"terry"
+	        };
+	        var obj2 = {
+	            name:"terry"
+	        };
+	        angular.equals(obj1,obj2);	//true
+
+
+	6) angular.extend
+		angular.extend(dst, src);
+		Extends the destination object dst by copying own enumerable properties from the src object(s) to dst. You can specify multiple src objects. If you want to preserve original objects
+
+	7) angular.forEach
+		angular.forEach(obj, iterator, [context]);
+
+		Invokes the iterator function once for each item in obj collection, which can be either an object or an array. The iterator function is invoked with iterator(value, key, obj), where value is the value of an object property or an array element, key is the object property key or array element index and obj is the obj itself. Specifying a context for the function is optional.
+
+		var values = {name: 'misko', gender: 'male'};
+		var log = [];
+		angular.forEach(values, function(value, key) {
+		  this.push(key + ': ' + value);
+		}, log);
+	8) angular.fromJson
+		Deserializes a JSON string. 反序列化
+	9) 检测方法
+		angular.isArray
+			Determines if a reference is an Array.
+		angular.isDate
+			Determines if a value is a date.
+		angular.isDefined
+			Determines if a reference is defined.
+		angular.isElement
+			Determines if a reference is a DOM element (or wrapped jQuery element).
+		angular.isFunction
+			Determines if a reference is a Function.
+		angular.isNumber
+			Determines if a reference is a Number.
+		angular.isObject
+			Determines if a reference is an Object. Unlike typeof in JavaScript, nulls are not considered to be objects. Note that JavaScript arrays are objects.
+		angular.isString
+			Determines if a reference is a String.
+		angular.isUndefined
+			Determines if a reference is undefined.
+	10) 大小写转化方法
+		angular.lowercase
+			Converts the specified string to lowercase.
+
+		angular.uppercase
+			Converts the specified string to uppercase.
+
+	11) angular.merge
+		angular.merge(dst, src);
+		Deeply extends the destination object dst by copying own enumerable properties from the src object(s) to dst. You can specify multiple src objects. 
+		Unlike extend(), merge() recursively descends into object properties of source objects, performing a deep copy.
+
+	12)	angular.toJson
+		Serializes input into a JSON-formatted string. Properties with leading $$ characters will be stripped since angular uses this notation internally.
+
+
+
+
+    		
+1.自定义服务
+	对象
+	factory	工厂函数模式
+		app.factory("User",function(){
+			return {
+
+			};
+		});
+	service 构造函数模式
+		app.service("User",function(){
+			this.
+		});
+	provider 提供器模式
+		特点：
+			可以在配置阶段进行配置
+		对象是由提供器创建	
+
+		app.constant("name","briup");
+		app.provider("User",function(){
+			//通过构造函数模式创建服务的提供器
+			this.url="";
+			this.setUrl = function(url){
+				this.url = url;
+			};
+			//构造服务对象的工厂函数应该是$get的值
+			this.$get = function($http){
+				var self = this;
+				return {
+					$http(url).success(function(){
+
+					});
+				};
+			}
+		});
+		app.config(function(UserProvider){
+			UserProvider.setUrl("");
+		});
+
+	value
+		app.value("name","briup");
+	constant
+		app.constant("address","jiangsu");
+		可用于配置阶段
+		app.config(function(address){
+
+		});
+
+
+服务生命周期
+	1.配置阶段
+		service
+		factory
+		value
+		constant(可以在配置阶段注入)
+		->
+		provider 初始化阶段，没有服务，其他服务不能在这个阶段注入
+
+		app.provider("",function(){
+			//配置阶段执行，初始化provider
+		});
+		app.config(function(){
+			//配置阶段执行，进行模块配置
+		});
+
+	2.运行阶段
+		provider初始化结束，开始创建服务，可以注入其他服务
+
+
+2.ng functions
+
+	1)module
+	//核心模块
+	var app = angular.module("app",['app.directives','app.services']);
+	//指令组件模块
+	var appDrt = angular.module("app.directives",[]);
+	appDrt.directive();
+	appDrt.directive();
+	appDrt.directive();
+
+	//服务组件模块
+	var appSer = angular.module("app.services",[]);
+	appSer.service();
+	appSer.service();
+
+
+	参数
+		1. 模块名称 支持命名空间
+		2. 依赖模块组成的数组
+
+	2)angular.element()
+		$();
+	3)angular.bootstrap();
+		手动启动指定模块
+	4)angular.isXxx
+	5)	angular.copy(src,des);
+		angular.merge(obj1,obj2);
+		angular.extend(src,parent);
+	6) 	angular.fromJson
+		angular.toJson
+
+3. 路由机制
+	
+
+
+
+
+
+
+
+
+
+
+
+
+ngRoute(路由)
+	The ngRoute module provides routing and deeplinking services and directives for angular apps.
+
+	Installation
+		First include angular-route.js in your HTML:
+			<script src="angular.js">
+			<script src="angular-route.js">
+		Then load the module in your application by adding it as a dependent module:
+			angular.module('app', ['ngRoute']);
+	1. Provider
+		$routeProvider
+		Used for configuring routes.
+
+		Methods
+			1) when(path, route);
+				Adds a new route definition to the $route service.
+				Parameters
+				path ( string )
+					path can contain named groups starting with a colon: e.g. :name. All characters up to the next slash are matched and stored in $routeParams under the given name when the route matches.
+
+					path can contain named groups starting with a colon and ending with a star: e.g.:name*. All characters are eagerly stored in $routeParams under the given name when the route matches.
+
+					path can contain optional named groups with a question mark: e.g.:name?.
+
+					例如：
+					/color/:color/largecode/:largecode*\/edit
+					/color/brown/largecode/code/with/slashes/edit
+					匹配结果
+					color: brown
+					largecode: code/with/slashes.
+
+				route (object)
+					Mapping information to be assigned to $route.current on route match.
+
+					Object properties:
+						controller :{(string|function()} 
+							Controller fn that should be associated with newly created scope or the name of a registered controller if passed as a string.
+						template – {string=|function()} 
+							html template as a string or a function that returns an html template as a string which should be used by ngView or ngInclude directives. This property takes precedence over templateUrl.优先于
+						templateUrl – {string=|function()}  
+							path or function that returns a path to an html template that should be used by ngView.
+						resolve - {Object.<string, function>}  
+							An optional map of dependencies which should be injected into the controller. 
+							key – {string}: a name of a dependency to be injected into the controller.
+							factory - {string|function}: If string then it is an alias for a service. Otherwise if function, then it is injected and the return value is treated as the dependency. 
+						redirectTo – {(string|function())=} 
+							value to update $location path with and trigger route redirection.
+				例如：
+				$routeProvider
+			 	.when('/Book/:bookId', {
+			 	 	templateUrl: 'book.html',
+			 	 	controller: 'BookController',
+			 	 	resolve: {
+			 	   		key:'UserService'
+			 	 	}
+				});
+
+				<div ng-view></div>
+			2) otherwise(params);
+				Sets route definition that will be used on route change when no other route definition is matched.
+
+				params 	Objectstring 	
+					Mapping information to be assigned to $route.current. If called with a string, the value maps to redirectTo.
+
+
+	2. Service
+		1) $route
+			$route is used for deep-linking URLs to controllers and views (HTML partials). It watches $location.url() and tries to map the path to an existing route definition.Requires the ngRoute module to be installed.You can define routes through $routeProvider's API.The $route service is typically used in conjunction with the ngView directive and the $routeParams service.
+
+			Properties
+
+			1.current ( Object )
+				Reference to the current route definition. The route definition contains:
+
+			    controller: The controller constructor as define in route definition.
+
+			    locals: A map of locals which is used by $controller service for controller instantiation. The locals contain the resolved values of the resolve map. Additionally the locals also contain:
+			        $scope - The current route scope.
+			        $template - The current route template HTML.
+
+			2.routes ( Object )	
+
+				Object with all route configuration Objects as its properties.
+
+			Methods
+    		1.reload();
+    			Causes $route service to reload the current route even if $location hasn't changed. As a result of that, ngView creates new scope and reinstantiates the controller.
+
+    		2.updateParams(newParams);
+    			参数：newParams 	Object<string, string> 	mapping of URL parameter names to values
+    			Causes $route service to update the current URL, replacing current route parameters with those specified in newParams.
+    		Events
+			1.$routeChangeStart
+				Broadcasted before a route change. At this point the route services starts resolving all of the dependencies needed for the route change to occur. Typically this involves fetching the view template as well as any dependencies defined in resolve route property. Once all of the dependencies are resolved $routeChangeSuccess is fired.
+			2.$routeChangeSuccess
+				Broadcasted after a route dependencies are resolved. ngView listens for the directive to instantiate the controller and render the view.
+			3.$routeChangeError
+				Broadcasted if any of the resolve promises are rejected.
+
+		2) $routeParams
+			The $routeParams service allows you to retrieve the current set of route parameters.Requires the ngRoute module to be installed.The route parameters are a combination of $location's search() and path().
+			/*
+				Given:
+			 	URL: http://server.com/index.html#/Chapter/1/Section/2?search=moby
+				Route: /Chapter/:chapterId/Section/:sectionId
+				Then
+			*/
+			$routeParams ==> {chapterId:'1', sectionId:'2', search:'moby'}
+
+	3. Directive
+		ngView
+		ngView is a directive that complements the $route service by including the rendered template of the current route into the main layout (index.html) file. Every time the current route changes, the included view changes with it according to the configuration of the $route service.
+
+		Events
+			$viewContentLoaded
+			Emitted every time the ngView content is reloaded.
+
+
+	
+	

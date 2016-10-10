@@ -1,0 +1,48 @@
+------------------------------代码更新，本地仓库->远程仓库------------------------------
+1. git init
+	将当前文件夹初始化git本地仓库
+2. git add *							
+	将当前文件夹中所有的文件添加到缓存中
+3. git commit -m '填写提交的原因'
+
+	将缓存中的所有文件提交到本地仓库中
+4. git remote add origin https://github.com/pluslicy/-test.git
+	将本地仓库与远程仓库建立起连接，远程仓库地址为 https://github.com/pluslicy/-test.git
+5. git push -u origin master
+	将本地仓库中的所有文件推送的远程仓库中
+
+6. 如果修改了git仓库中的文件，想再次提交，这时候只需
+	git add *
+	git commit -m '再次提交'
+	git push origin master
+
+总结：
+	如果你已经远程提交过你的代码，也就是说你早已经将本地仓库和远程仓库绑定了，现在只是本地仓库内容变化了，你想让这个变化体现在远程仓库中。你只需要做
+	git add *
+	git commit -m '再次提交'
+	git push origin master	
+	就会自动提交到远程仓库中，因为你早已经绑定了远程仓库和本地仓库了，计算机已经记住了你的远程仓库的地址，你无序再执行git remote add origin https://github.com/pluslicy/-test.git， 如果执行反而报错！
+
+
+------------------------------代码更新，远程仓库->本地仓库------------------------------
+1. 当你想把别人仓库中的代码克隆到你本地仓库时候可以调用以下命令从远程仓库中获取内容
+	1) 新建任意文件夹，但是不要执行git init。也就是不要初始化
+	2) 执行 git clone https://github.com/pluslicy/14Java.git
+	3) 这时候你会发现当前文件中多了一个 14Java 的文件
+	4) 进入这个文件，你会发现这里面有个.git的隐藏文件
+2. 当你本地已经clone过别人的仓库，但是别人仓库中的内容进行了更新，你也想把你仓库中的内容更新，就像我更新了笔记，但是你之前已经克隆了我的笔记，你想让你的笔记和我的笔记保持同步，可以执行以下操作
+	1)在dos里 进入到14Java这个文件夹中.即 cd 14Java
+	2)执行 git pull origin master即可。
+		该命令的意思是获取到远程服务器中的最新版本，并且将最新版本和本地仓库的内容进行合并
+		相当于执行了
+			git fetch origin master
+			git merge origin/master
+
+总结
+	也就是说，你只要克隆过我的笔记。如果我上课时候更新了笔记以及代码，你如何将这些更新也更新到你的本地仓库呢？
+		1. 进入到14Java目录下
+		2. 执行 git pull origin master
+	仅仅两步即可。
+
+
+git clean -dfx 清除用户信息

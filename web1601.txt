@@ -1,0 +1,3017 @@
+﻿1.语法
+	表达式末尾加;
+2. 数据类型
+	基本数据类型
+		null
+		undefined
+		number
+		boolean
+		string
+	  	基本数据类型之间的类型转换
+
+****************************************************************************************************
+1. 类型转换
+	01) 其他数据类型到Boolean类型转换
+		通过Boolean() 函数转换
+
+			【Boolean	   true		false】
+			String		非空字符串	""
+			Number		任何非0	0和NaN
+			Object		任何对象	null
+			Undefined	n/a		undefined	(n/a not applicable 不适用)
+		例如：
+			Boolean("");		//false
+			Boolean(0);		//false
+			Boolean(NaN);		//false
+			Boolean(null)		//false
+			Boolean(undefined)	//false
+			Boolean("briup");	 //true
+			Boolean(1);	 //true
+
+	02) 其他数据类型到数值类型转换    
+		1.Number()       
+			1) 如果转换的值是null,undefined,boolean,number
+				Number(true);		//1
+				Number(false);		//0
+				Number(null);		//0
+				Number(undefined);	//NaN
+				Number(10);			//10 如果是数字值,原样输出
+		
+			2) 如果是字符串：
+				Number("123");  //如果仅包含数值，转换为对应的数值
+				Number("234.1");//解析为对应的小数
+				Number("+12.1");//首位为符号位，其余为为数值，转换为对应的数值
+				NUmber("1+2.3");//NaN 符号位出现在其他位置，解析为NaN
+				Number("0xa");  //如果仅包含十六进制格式，转为为对应的十进制的值
+				Number("010");	//【注意！】不会当做八进制被解析，结果为10
+				Number("");		//空字符串被转换为0
+				Number("123ac");//包含其他字符： NaN
+				Number(" 12");	//12
+		2.parseInt(stirng,radix) 
+			stirng 必需，要被解析的字符串
+			radix  可选，表示要解析的数字的基数。该值介于2-36之间。
+			1) 如果转换的值是null,undefined,boolean,number
+				parseInt(true);		//NaN
+				parseInt(false);	//NaN
+				parseInt(null);		//NaN
+				parseInt(undefined);//NaN
+				parseInt(10);		//10 如果是整数值，原样输出
+				parseInt(10.3);		//10 如果是小数，舍去小数点一级后面的内容
+			2) 如果是字符串：
+				parseInt("123");  //123；如果仅包含数值，转换为对应的数值
+				parseInt("234.1");//234；小数点后面的数值省略
+				parseInt("+12.1");//12； 首位为符号位，其余为为数值，转换为整数
+				parseInt("0xa");  //10； 如果仅包含十六进制格式，转为为对应的十进制的值
+				parseInt("010");  //10； 【注意！】不会当做八进制被解析，结果为10
+				parseInt("");	  //NaN；空字符串被转换为NaN
+				parseInt("1+2.3");//1;	如果首位为数值，依次向后解析，找到连续的数值，直到遇到第一个非数值的，将之前获取的数值转换为Number返回
+				parseInt("123ac");//123;
+       	3.parseFloat()
+	 		与parseInt() 类似，但是也有不同： 
+				1.字符串中的第一个小数点是有效的，而第二个小数点则无效其后的内容会被省略
+				2.始终忽略前导0
+				parseFloat("22.3.4")	//22.3
+				parseFloat("022.34");	//22.34
+				3.不能解析0x
+	03) 其他数据类型到字符串类型转换
+		1. toString()函数
+			默认情况下，toString()是以十进制格式返回数值的字符串表示，通过传递参数，可以输入以二进制，八进制，十六进制乃至任意有效进制格式的字符串值
+				var num = 10;
+				num.toString();		"10"
+				num.toString(2);	"1010"
+				num.toString(8);	"12"
+				num.toString(16);	"a"
+			但是null ,undefined 没有toString() 方法
+      			null.toString()			//报错 TypeError: null has no properties	 
+       			undefined.toString();	//报错 TypeError: undefined has no properties
+		2. String() 构造函数
+       			String(null)		"null"
+       			String(undefined);	 "undefined"
+
+2，操作符
+	01) 一元操作符
+		++,--,+,-操作符应用任何类型数值都返回一个【数值类型】，先将任意类型的值转换为Number然后进行运算(通过Number()方法进行转换)
+		1.递增 ++  
+			var a = "11";
+			1+a++;
+			1+ ++a;
+			前置：操作该变量之前进行递增或者递减操作
+			后置：操作该变量之后进行递增或者递减操作
+			对任意数据类型的操作数都适用，使用前先将其转换为数字(Number())，然后再进行运算,在应用于对象的时候，优先先调用对象的valueOf方法，以取得一个可供操作的值,如果子类对象仅重写了toString(),调用该方法。
+		2.递减 --
+			前置：操作该变量之前进行递增或者递减操作
+			后置：操作该变量之后进行递增或者递减操作
+			对任意数据类型的操作数都适用，使用前先将其转换为数字，然后再进行运算在应用于对象的时候，先调用对象的valueOf方法，以取得一个可供操作的值,如果子类对象仅重写了toString(),调用该方法。
+		3.加 +
+			相当于调用Number();
+			var a = "12"
+			+a ;	// 12  相当于调用了Number("12")
+		4.减 -
+			将一元减应用于数值时，数值会变成负数。
+			将一元减应用于非数值时，遵循与一元加操作符相同的规则，最后将得到的数值转化为负数
+
+	02) 布尔操作符, 非(NOT)
+		逻辑非 !
+		该操作符应用任何类型数值都返回一个【布尔值】。先将任意类型的数值转换为Boolean，然后取反，
+			!a ==> !Boolean(a)
+			!0	//true
+			!""	//true	
+			!NaN	//true	
+			!false	//true
+
+			连用两次逻辑非 ，就可以将任意数据类型转化为Boolean类型，!!a ==> Boolean(a)
+			!!""	//false
+    03) 逻辑与 && (同真才真，有假则假) 也被称为短路语句
+		可应用于任意数值。如果有一个操作数不是布尔类型，逻辑与就不一定返回boolean类型
+
+		1.如果第一个操作数是 
+			null,NaN,undefined,false,0,""可被转换为false的值的时候返回该值
+		2.如果第一个数其他，返回第二个数
+			var s1 = 8;
+			var s2 = "briup";
+			var s3 = "";
+			var result	= s1 && s2;	//briup
+			var result2 = s3 && s2;	//空字符串
+
+    04) 逻辑或 ||(有真则真，同假才假)
+		false || 
+		如果两个操作数都是null,NaN,undefined,false,0,""可被转换为false的值的时候返回该值
+
+		如果第一个操作数是null,NaN,undefined,false,0,"" 则返回第二个操作数
+    05) 加性操作符
+		1. 加法 +
+			m + n
+			1) 当m,n不为String,Object类型的时候，先将m,n转换为Number类型，然后再进行计算
+				true + false;	  //1；Number(true)+Number(false);
+				true + 1;	  //2；Number(true) + 1
+				null + undefined; //NaN；Number(undefined) -> NaN
+			2) 当m,n有一个为String,无论另一个操作数为何（但不为对象）都要转换为String，然后再进行拼接
+				"1" + true;	// 1true
+				"1" + undefined;// 1undefined
+				"1" + 1;	// 11
+			3) 当m,n 有一个为对象，如果该对象既重写toString,又重写了valueOf方法，先调用valueOf方法获取返回值，将该返回值和另外一个操作数进行运算。如果该对象没有重写valueOf方法，将调用toString方法获取返回值，将该返回值和另外一个操作数进行运算。
+				var o = {
+					name:"briup",
+					valueOf:function(){
+						return "1";
+					}
+				}
+				o+1;		//2；o+1
+		
+		2. 减法 -
+			返回值为【数值类型】。无论操作数为任何类型，先将其使用Number()转换器转换为Number类型，然后再计算。
+			true - 1;		//0;	1-1
+			null - true;	//-1 ;	0-1
+			1 - undefined	//NaN
+			var o = {
+				name:"briup",
+				valueOf:function(){
+					return 1;
+				}
+			}
+			o-1;		//0;	1-1
+	 
+	06) 乘性操作符
+		返回值为【数值类型】当操作数为非数值的时候执行自动的类型转化Number()
+		1. 乘法 *
+			如果两个数都是数值，执行常规的乘法计算
+			如果一个操作数是NaN,结果为NaN
+			超过数值范围返回Infinity
+			如果有一个操作数不是数值，则先调用Number()将其转换为数值。
+		2. 除法 /
+			如果一个操作数是NaN,结果为NaN （0/0 ; NaN）
+			一个非0值除0 Infinity   
+			如果有一个操作数不是数值，则先调用Number()将其转换为数值。
+			var s1 = 5;
+			var s2 = 2;
+			var result = s1/s2;  //2.5
+		3. 取余 %
+			如果两个数都是数值，执行常规的取余计算
+			如果一个操作数是NaN,结果为NaN（任意数%0 ; NaN）
+			如果有一个操作数不是数值，则先调用Number()将其转换为数值。
+
+	07) 关系操作符
+		< > <= >=  ,返回一个【Boolean】值
+		1.如果两个操作数是字符串，比较字符串中对应位置的每个字符的字符编码值
+			"a">"b"	//false
+			"1">"a"	//false
+		2.如果一个操作数是数值，将另外一个操作数也转换为数值进行比较
+			"3">1;			//true
+			3>true;			//true 3>Number(true)
+			3>undefined;	//false Number(undefined)=NaN ;任何数和NaN比较结果都为false
+		3.如果一个操作数是对象，先调用valueOf(),再调用toString()将返回值与另外一个操作数比较，如果没有重写toString() valueOf()则始终为false
+			var o = {
+				name:"briup",
+				valueOf:function(){
+					return "13";
+				}
+			}
+			o>2		// true ; "13">2
+    08) 相等操作符,返回【Boolean】
+		1.相等和不相等 ==, != (先转换在比较)
+			1.如果两个操作数都为字符串，比较字符序列
+			2.如果两个操作数都为数值类型，比较值的是否相等
+			3.如果两个操作数都是对象，比较的对象的引用
+			4)null == undefined		//true
+			5)NaN与任何值（包括NaN）相等比较结果为false，不等结果为true.
+			6)如果一个操作数为number类型，另外一个操作数为undefined,null,boolean,string之一，先将这些数据类型转换为数值，再进行比较
+
+		2.全等和不全等
+			仅比较不转换，先比较两个数所属的数据类型，如果类型不同则不同，如果类型相同，再继续比较两个数的值
+			console.log("55" == 55); true
+			console.log("55" === 55);false
+			null == undifined;		//true null派生自undifined
+			null === undifined;		//false
+
+    09) 三目运算符 ? : 
+		variable = boolean_expression ? true_value : false_value;
+		如果boolean_expression为true,将true_value赋给variable，否则将false_value赋给variable
+	    
+		例如：求任意两个数之间最大值
+	       function max(m,n){
+				return m>n?m:n;	//如果m>n为true返回m,如果m>n为false,返回n
+	       }
+    10) 赋值运算符 = 
+       将右侧的值赋给左侧的变量
+       可以和其他算术运算符连用 *= /= %= += -= 
+	   var a = 4;
+
+       a *= 3; //=> a = a*3;
+    11) 逗号操作符
+       可以在一条语句中执行多个操作
+       var num1=1,num2 = 2, num3 = 3;
+***************************************************************************************************
+
+		
+	引用数据类型
+		Object
+			Function 
+			Array
+			RegExp
+			Date
+			Math
+			包装器函数Number,Boolean,String
+3. 操作符
+4. 语句
+	1，流程控制语句
+    01) if语句
+		if(condition){
+			statement1
+		}else{
+			statement2
+		}
+		condition表示任意表达式，该表达式求值的结果不一定是布尔类型，如果不是布尔类型，ECMAScript会调用Boolean() 转换函数将这个表达式结果转换为一个布尔类型，如果condition求值结果为true,执行statement1。如果求值结果为false，执行statement2
+
+		if(condition){
+			statement1
+		}
+		statement2
+
+		
+    02)switch语句
+		switch(expression){
+			case val:
+
+			break;
+
+			case val2:
+
+			break;
+			default:
+		}
+      可以在switch语句中使用任何数据类型。
+      case的值不一定是常量，也可以是变量，甚至是表达式。
+
+2. 循环语句	
+	01)for语句
+		for循环是一种前测试循环语句，但它具有在执行循环之前初始化变量和定义循环后要执行的代码的能力。以下是for循环的语法：
+        初始化表达式，控制表达式，循环后表达式
+		for(initialization;expression;post-loop-expression){
+			//loop option
+		}
+		例如:
+		var sum = 0;
+		for(var i=0;i<10;i++){
+			sum +=i;
+		}
+		console.log(i); //10  
+
+		ECMAScript不存在块级作用域，在循环内部定义的变量也可以在外部访问到
+	
+		死循环
+		for(;;){
+			//当for中的表达式省略的时候，会创建一个死循环
+		}
+		while(true){
+		
+		}
+	02) do-while语句  
+		do{
+		
+		}while(condition); 
+		后测试循环语句，即只有在循环体中的代码执行之后，才会测试出口条件。循环体内的代码最少被执行一次。
+
+	03)	while语句	
+		while(condition){
+		
+		}
+		前测试循环语句，即在循环体内的代码被执行之前，就会对出口条件求值。因此，循环体内的代码有可能永远不会被执行。
+		while(false){
+			//
+		}
+    04) for-in 语句
+		是一种精准的迭代语句，可以用来枚举对象的属性
+		for(property in expression){
+			statement
+		}
+		例如:
+		打印出window对象中所有的属性
+			for(var propName in window){
+				console.log(propName);
+			}
+    label 语句
+		使用label可以在代码中添加标签，以便将来使用
+		label : for(int i=0;i<10;i++){
+			if(i == 5){
+				break label;
+			}
+		}
+    循环关键字
+       break 跳出循环体
+       continue 结束本次循环，进行下一次循环
+5.对象(对象的定义:对象是属性和方法的集合)
+	1）定义
+		构造函数法
+			var obj = new Object();
+		字面量
+			var obj = {
+				属性名1:属性值1,
+				属性名2:属性值2,
+				...
+				属性名n:属性值n
+			};
+	2）属性访问
+		.  //obj.name;	
+	
+		[]	//obj["name"];
+
+		var key = "name";
+
+		var obj = {name:"terry",key:12}
+
+		obj.key		//12
+
+		obj[key] 	//terry
+	3）Object
+		所有对象都直接或间接继承Object（函数本质是一个对象，所有的对象直接或间接继承Object,Object中存在的方法，在所有的子对象中都存在）
+
+		{
+			toString	
+			valueOf
+			hasOwnProperty
+			propertyIsEnumerable
+			toLocaleString	
+		}
+
+
+	4）属性检测
+		in			自有，继承
+		hasOwnProperty()	自有
+		propertyIsEnumerable()	是否可以枚举
+	5)对象的属性与属性值的遍历
+	for(var key in obj){
+		console.log(key+":"+obj[key]);	
+	}
+
+6. 函数
+	1）定义
+		函数声明
+			function add(){
+
+			}
+		函数表达式
+			var add = function(){
+
+			};
+	2）形参，实参
+		function add(a,b){
+			console.lothis);
+			alert(a+b);
+		}
+		add(1,2);
+	3）函数调用
+		函数名(实参列表);
+		函数名.call(函数this,实参列表);
+		函数名.apply(函数this,实参数组/类数组);
+ 			(function(){
+				var d = 3; 
+			})();
+			==》()();
+			function inner(){
+				var e = 6;
+			}
+			inner(); 
+	4）函数内部属性
+		只能在函数内部访问；内部属性在函数调用的时候才能初始化
+		arguments
+			类数组对象，存储实参
+			length	实参的个数
+			callee	指向当前函数
+		this
+			指向当前函数的环境对象
+	5）函数外部属性
+		length 	获取函数期望参数个数
+		add.length
+		prototype	指向函数的原型对象
+
+	6) 动态删除和动态添加属性
+		删除
+			delete 对象名.属性名;
+		添加
+			obj.saraly(3500);
+	7）函数当做参数或者返回值使用
+		
+	7-1.参数
+		function add(a,b){
+			alert(a+b);
+		}
+
+		
+		function callMethod(method,param1,param2){
+			method(param1,param2);
+		}
+
+		//将add方法作为值来传递
+		callMethod(add,5,3);
+
+	7-2.返回值
+
+
+	function getMethod(){
+			//add = b001
+			var add = function(a,b){
+				alert(a+b);
+			};
+			//函数当做返回值返回
+			return add;
+		}
+		// result = add = b001
+		var result = getMethod();
+		console.log(result);
+		//调用函数
+		result(1,3);
+
+
+		a.var result = students.sort((function(key){
+			//返回比较器函数
+			return function(a,b){
+				if(a[key] < b[key]){
+					return -1;
+				}else if(a[key] > b[key]){
+					return 1;
+				}
+			}
+		})("age"));
+
+           
+	8) 函数的方法
+		add();	
+	9)闭包
+		/*for(var i=0;i<btns.length;i++){
+		//没点击按钮前，即解析的时候i为3，所以alert的都是3
+		btns[i].onclick=function(){
+		alert(i);
+		};
+		}*/
+
+		//闭包的解决方法
+		for(var i=0;i<btns.length;i++){
+		btns[i].onclick=(function(num){
+		return function(){
+		alert(num);
+		}
+		})(i);
+		
+
+7. 数组
+	存放任意数据类型指的集合
+	1）定义
+		构造函数
+			var arr = new Array();
+
+		字面量
+			var arr = [元素1,元素2,...元素n];
+	2）长度
+		arr.length
+		length,拥有元素的个数
+
+		可读可写
+	3）访问
+		数组名[索引]
+		索引从0开始。
+		数组元素默认值为undefined
+
+	4)数组的变量
+		for(var key in arr ){
+		//key 索引
+		var val= arr[key];
+		}
+
+	5）API
+		{API 1)函数含义，函数的参数，函数返回值}
+		1.检测数组
+
+		Array.isArray(arr);//isArray是Array的内部属性，只有Array可以调用
+			函数含义:是否是数组
+			函数的参数:数组名
+			返回值:如果arr是数组,返回true，反之
+					
+		2.转换数组为字符串
+		2.1)var result=arr.toString();//arr中元素使用","连接
+		2.2）var result=arr.join("-");arr中元素使用"-"连接，可自定义连接符号
+		2.3)json=JSON.stringify(arr);//将arr转换为JSON格式的字符串(序列化)
+                    json=JSON.parse(arr);//将JSON格式的字符串重新转换为arr数组格式(反序列化)
+		
+		
+		3.数组继承Object方法，并且对这些方法进行了重写
+        	toLocaleString();
+        	toString();在默认情况下都会以逗号分隔字符串的形式返回数组项
+			例如：
+			var arr = ["terry","larry","boss"];	
+			arr.toString()		//terry,larry,boss 
+			valueOf(); 在默认情况下以数组字面量的方式显示（firefox）
+			arr.valueOf();		//["terry","larry","boss"];	
+		join();	使用指定的字符串用来分隔数组字符串
+			例如：
+			arr.join("||");		//briup||terry||jacky
+			
+	
+		数组对象可以调用哪些方法？
+		var arr = new Array(1,2,3,4,5);
+		arr ->Array.prototype-> Object.prototype
+
+		
+		concat//arr1.concat(arr2);
+				数组的连接
+				参数：
+					1)数组，可有多个
+						直接连接
+					2)值列表
+						直接连接
+				返回值
+					连接后的结果
+				注意：不改变原值
+
+		push//arr.push(参数);将元素添加到数组的末尾
+				返回值：为添加后数组的长度
+				参数:	
+					参数为多个，按照顺序入栈
+					参数如果为数组的时候，当做普通值压入
+
+		pop//arr.pop()	将末尾的元素从数组中移出
+				返回值：出栈元素
+				参数：没有参数
+
+		shift//arr.shift() 出队
+				将数组中开头的元素移出
+				返回值：出队列元素
+				参数：没有参数
+
+		unshift//arr.unshift() 插队
+				将元素插入到数组的开头位置
+				参数：	要插入的元素
+				返回值：插入后数组的长度
+
+
+		slice//	arr.slice();
+			获取子数组
+			参数：
+				1)1个整数（索引）
+					从指定索引位置开始截取，直到数组的末尾
+				2)2个整数（索引开始位置,索引结束位置）
+					从索引开始位置截取，直到结束位置但是不包含结束位置
+				3)负数
+					从数组的末尾开始计数，最后一个元素位置为-1，但是截取子数组的时候还是从当前位置开始往后截取
+			返回值：
+				截取到的子数组
+			注意:不改变原值
+
+
+		splice//可以对数组进行插入，删除，替换操作
+			参数：
+				1)1个(删除的起始位置)
+					从指定位置开始删除，直到数组末尾
+
+				2)两个(删除的起始位置，删除元素的个数)
+					删除
+				3)三个(删除的起始位置，删除元素的个数，插入的元素)
+					
+			返回值：	
+				删除后的元素
+			注意:改变原值
+		
+
+		reverse//arr.reverse();
+
+				将数组中的元素顺序翻转
+				参数：没有参数
+				返回：为翻转之后的数组
+				注意！改变了原数组
+
+
+		
+
+		sort//!!sort()默认调用了数组项的toString方法，然后比较得到的字符串，如果是[object Object]默认排序
+
+			//比较器
+			arr.sort(function(a,b){
+			if(a>b){
+				return 1;
+			}
+			return -1;
+		});
+
+			result=arr.sort((function(key){
+			//返回比较器函数
+			return function(a,b){
+				if(a[key] < b[key]){
+					return -1;
+				}else if(a[key] > b[key]){
+					return 1;
+				}
+			}
+		})("age"));//比较什么传什么进去
+
+
+		迭代
+			参数(匿名函数,该匿名函数的THIS值)
+			
+							
+			匿名函数(当前遍历的元素,索引,当前操作的对象){
+
+			}
+
+		迭代方法：
+		参数： 每一项上运行的函数，运行该函数的作用域对象（可选）
+		every();对数组中的每一运行给定的函数，如果该函数对每一项都返回true,则返回true
+			var arr = [11,5,23,7,4,1,9,1];
+			var result = arr.e
+			very(function(item,index,arr){
+				return item >2;
+			});
+			console.log(result); //false
+		some(); 对数组中的每一运行给定的函数，如果该函数对任一项都返回true,则返回true
+			var result = arr.every(function(item,index,arr){
+				return item >2;
+			});
+			console.log(result); //true
+		filter();对数组中的每一运行给定的函数，会返回满足该函数的项组成的数组
+			var result = arr.filter(function(item,index,arr){
+				return item >2;
+			});
+			console.log(result); // [11, 5, 23, 7, 4, 9]
+		map();对数组中的每一运行给定的函数,返回每次函数调用的结果组成的数组
+			var result = arr.map(function(item,index,arr){
+				return item * 2;
+			});
+			console.log(result); // [22, 10, 46, 14, 8, 2, 18, 2]
+		forEach();对数组中的每一运行给定的函数,没有返回值，常用来遍历元素
+			var result = arr.forEach(function(item,index,arr){
+
+				console.log(item);
+
+			});
+8.正则表达式 RegExp
+	1）定义
+		构造函数
+			var pattern = new RegExp("正则","修饰符");
+		字面量		
+			var pattern = /正则/修饰符;
+	2）修饰符
+			i  ignoreCase说明匹配模式匹配是不区分大小写
+			g  global说明模式匹配应该是全局的
+			m  multiline用以在多行模式中执行匹配。
+	3)  特殊字符类   
+                .			除换行符和其他Unicode行终止符之外的任意字符
+		\w			任何ASCII字符，等价于[a-zA-Z0-9]包括"-"
+		\W			任何非ASCII字符组成的，等价于[^a-zA-Z0-9]
+		\s			任何Unicode空白符：空格，制表符，回车
+		\S			任何非Unicode空白符的字符
+		\d			任何ASCII数字，等价于 [0-9]
+		\D			任何非ASCII数字之外的任意字符，等价于 [^0-9]
+		[\b]		        退格直接量（特例）
+
+	4）正则表达式对象
+		pattern->RegExp.prototype->Obejct.prototype
+
+		属性
+			lastIndex
+	当正则表达式为全局模式下，用来维护一下次检索的起始位置
+			ignoreCase
+			global
+			multiline
+		方法
+			exec()	执行检索	类数组对象
+			test()	执行检测	true
+
+******************************************************************************
+2. 直接量字符
+		正则表达式中所有字母和数字都是按照字面含义进行匹配的。
+		   字符			匹配
+		-----------------------
+		字母和数字		自身
+			\t			制表符
+			\n			换行符	
+			\v			垂直制表符
+			\f			换页符
+			\r			回车符
+			\xnn		由十六进制数nn指定的拉丁字符  \x0A => \n
+			\uxxxx		由十六进制xxxx指定的Unicode字符，例如 \u0009 => \t
+			\cX			控制字符 ^X,例如 \cJ 等价于换页符 \n
+	3. 字符类
+		将直接量字符单独放在方括号内就组成了字符类。一个字符类可以匹配它所有包含的任意字符。
+		[...]		方括号内的任意字符
+		[^...]		不在方括号内的任意字符
+	特殊字符类
+		.			除换行符和其他Unicode行终止符之外的任意字符
+		\w			任何ASCII字符，等价于[a-zA-Z0-9]包括"-"
+		\W			任何非ASCII字符组成的，等价于[^a-zA-Z0-9]
+		\s			任何Unicode空白符：空格，制表符，回车
+		\S			任何非Unicode空白符的字符
+		\d			任何ASCII数字，等价于 [0-9]
+		\D			任何非ASCII数字之外的任意字符，等价于 [^0-9]
+		[\b]		退格直接量（特例）
+
+	4. 重复  一定要用在子表达式之后
+		{n,m}	匹配前一项至少n次，但是不超过m次
+		{n,}	匹配前一项n次或者更多次
+		{n}		匹配前一项n次
+		?		匹配前一项0次或者1次，等价于{0,1}
+		+		匹配前一项1次或者多次，等价于{1,}
+		*		匹配前一项0次或者多次，等价于{0,}
+
+		例如：
+			/[abc]/		匹配"a" "b" "c"中任意一个字符
+			/[^abc]/	匹配"a" "b" "c"之外的任意一个字符
+			/\d{2,4}/	匹配2~4个数字
+			/\w{3}\d?/	匹配三个字符或和一个可选的数字
+			/\s+java\s+/	匹配前后带有一个或多个空格的字符串"java"
+
+	5. 重复方式
+
+		贪婪重复
+			匹配重复字符时是尽可能多地匹配
+		非贪婪重复	
+			在待匹配的字符后跟随一个问号即可： ?? +? *? {1,5}?
+		例如：
+			/a+/	可以匹配一个或者多个连续的字母a, 当使用"aaa"作为匹配字符串时正则表达式会匹配它的三个字符
+			/a+?/	可以匹配一个或者多个连续的字母a, 但是尽可能少地匹配。只能匹配第一个a
+	6. 选择
+		使用字符 "|" 分割供选择的字符。选择项的尝试匹配次序是从左到右，直到发现了匹配项，如果左边的选择项匹配，就忽略右边的匹配项，即使它产生更好的匹配。/ab|cd|ef/ 可以匹配 "ab"或者"cd"或者"ef"
+	7. 分组
+		"()"作用：
+		1) 把单独的项组合成子表达式
+			以便可以像处理一个单元那样用"|""*""+""?"对单元内的项进行处理
+			/java(script)?/  可以匹配字符串java,后面的script可以有也可以没有
+			/(ab|cd)+|ef/	   可以匹配"ef",也可以匹配"ab""cd"一次或者多次
+		2) 在完整的模式中定义子模式 
+			当一个正则表达式成功地和目标字符串相匹配时，可以从目标串中抽出和圆括号中的子模式相匹配的部分。
+			/[a-z]+\d+/  一个或者多个小写字母后跟随一个或者多个数字
+			(/[a-z]+(\d+)/)	可以抽出每个匹配末尾的数字
+		3) 在同一正则表达式后面引用前面的子表达式。 
+			\1 引用第一个带圆括号的子表达式
+			/([Jj]ava([Ss]cript)?)\sis\s(fun\w*)/	   \2 引用 ([Ss]cript)
+			对正则表达式中前一个子表达式的引用，并不是指对子表达式模式的引用，而是对与那个模式相匹配的文本的引用
+				例如：
+				/['"][^'"]*['"]/	匹配单引号或者双引号内的0个或者多个字符,但是它并不要求左侧和右侧的引号匹配
+				/(['"])[^'"]*\1/	匹配单引号或者双引号内的0个或者多个字符,但是它要求左侧和右侧的引号匹配
+
+	8. 指定匹配位置
+
+		^	匹配字符串的开头，在多行检索中，匹配一行的开头
+		$	匹配字符串的结尾，在多行检索中，匹配一行的结尾
+		\b	匹配一个单词的边界，即位于字符\w和\W之间的位置，或者位于字符\w和字符串的开头或结尾之间的位置。
+		\B	匹配非单词边界的位置
+		(?=p)  零宽正向先行断言，要求接下来的字符都与p匹配，但不能包括匹配p的那些字符
+		(?!p)  零宽负向先行断言，要求接下来的字符不与p匹配
+	9. 修饰符
+		不是出现在两条斜线之间，而是出现在第二条斜线之后。
+		new RegExp("","igm")
+			i  说明匹配模式匹配是不区分大小写
+			g  说明模式匹配应该是全局的
+			m  用以在多行模式中执行匹配。
+				/java$/im	可以匹配"java",也可以匹配"java\nis fun"
+	  
+2. Javascript中 String对正则表达式的支持      
+	1. search()  
+		参数为一个正则表达式。如果参数不为正则表达式，则先通过RegExp将其转换为构造函数。不支持全局检索，返回第一个与之匹配的子串的位置，如果找不到匹配的子串，返回-1。
+		"JavaScript".search(/script/i); //返回4
+	2. replace() 
+		用以执行检索和替换操作。第一个参数是正则表达式，第二个参数是要替换的字符串。
+		text.replace(/javascript/gi,"JavaScript"); //不区分大小写将所有javascript转换为JavaScript
+	3. match()   
+
+		最常用的正则表达式方法，参数为正则表达式。返回由匹配结果组成的数组。
+		当正则表达式中没有g修饰符的时候，就不是全局匹配。这时，数组的第一个元素就为匹配的字符串，剩余的元素则是由正则表达式中用圆括号括起来的子表达式。如果该正则表达式设置为修饰符g,则该方法返回的数组包含字符串中所有匹配结果。
+		"1 plus 2 equals 3".match(/\d+/g) //返回["1","2","3"]
+
+		var url = /(\w+):\/\/([\w.]+)\/(\S*)/;
+		var text = "visit my blog at http://www.briup.com/~ee";
+		var result = text.match(url);
+		if(result!=null){
+			var fullurl = result[0];
+			var protocol = result[1];
+			var host = result[2];
+			var path = result[3];
+		}
+	4. split() 
+		参数可以为正则表达式
+		"1, 2, 3, 4, 5".split(/\s*,\s*/); //["1","2","3","4","5"] 允许分隔符左右两边留有空白
+
+3. Javascript中RegExp 
+	1. 构造函数
+		第一个参数包括正则表达式的主体部分，即正则表达式直接量中两条斜线之间的文本
+		第二个参数指定正则表达式的修饰符。只能传入g ,i,m或者其组合，可以省略
+		var zipcode = new RegExp("\\d{5}","g");
+	2. 属性
+		source		包含正则表达式文本
+		global		布尔值，表明这个正则表达式是否带有修饰符g
+		ignoreCase	布尔值，表明这个正则表达式是否带有修饰符i
+		multiline	布尔值，表明这个正则表达式是否带有修饰符m
+		lastIndex	如果匹配模式带有g，这个属性存储在整个字符串中下一次检索的开始位置，这个属性会被exec(), test()方法调用到
+	3.方法
+		1) exec()	
+			与match类似。参数为字符串。对一个指定的字符串执行一个正则表达式在一个字符串中执行匹配检索，如果没有找到任何匹配，返回null,如果找到了匹配，返回一个数组。这个数组元素中的第一个元素包含与正则表达式相匹配的子字符串，剩余的元素是圆括号内的子表达式相匹配的子串。当调用的正则表达式对象具有修饰符g时，它将把当前正则表达式对象的lastIndex属性设置为紧挨着匹配子串的字符位置，当同一个正则表达式第二次调用exec()时，它将从lastIndex属性所指的字符处开始检索。如果没有匹配到任何结果将lastIndex重置为0.
+
+			var pattern = /Java/ig;
+			var text = "JavaScript is more fun than java_is good";
+			var result;
+			while((result = pattern.exec(text))!=null){
+				console.log(result[0]+" at "+result.index);
+			}
+		2) test()	
+			参数为字符串。用test()对某个字符串进行检测，如果包含正则表达式的一个匹配结果，返回true.调用test()和调用exec()行为等价，test()会从lastIndex指定位置处开始检索某个字符串，如果它找到了一个匹配结果，立即设置lastIndex为当前匹配字符串的结束位置。
+
+			var pattern = /Java/ig;
+			var text = "JavaScript is more fun than java_is good";
+			var pattern.test(text); //结果 true
+			与test() exec()不同，String方法search() replace() match()并不会用到lastIndex属性
+*****************************************************************************************
+
+9.包装器数据类型
+	Bollean
+	Number
+	String
+		var str = "张三";
+		str ->String.prototype->Object.prototype
+
+
+
+10.字符串的属性和方法
+	属性:
+
+	length 
+	prototype 
+	constructor 
+
+	方法:
+
+	charAt() 返回指定位置的字符，超出索引值返回空字符串
+	charCodeAt() 返回一个整数，代表指定位置字符的Unicode编码
+	concat() 连接两个或多个字符串
+	fromCharCode() 从一些Unicode字符串中返回一个字符串
+	indexOf() 返回String对象内第一次出现子字符串的位置，如果没有找到，则返回-1
+	lastIndexOf() 返回String对象内最后出现子字符串的位置，如果没有找到，则返回-1
+	slice(start[,end]) 
+	substr(start[,length]) 
+	substring(start,end) 
+	toLowerCase() 
+	toUpperCase() 
+	valueOf() 
+	localeCompare()
+	trim()
+
+	match() 
+	replace() 
+	search() 
+	split()
+
+		string支持正则表达式：
+			不支持二次调用，支持g
+
+			str.match(/java/g);	
+				返回值为类数组/数组
+
+			split(pattern);
+				切割字符串
+				返回值为数组
+			replace(pattern,要替换的字符串)
+
+			str.search(pattern);
+				返回值为匹配正则表达式的字符首位置
+
+10  Math
+	对象
+	Math.random();	//0~1之间随机小数
+                       //Math.random()*100;0-100的随机数
+	Math.round()	//四舍五入
+	Math.ceil();	//单词为天花板,向上舍入
+	Math.floor();   //向下舍入
+	Math.abs();   //返回绝对值
+	Math.min();
+	Math.max();
+	2)其他方法：(了解即可，即用即查)
+		abs(num)		返回num绝对值
+		exp(num)		返回Math.E的num次幂
+		log(num)		返回num的自然对数
+		pow(num,power)	返回num的power次幂
+		sqrt(num)		返回num的平方根
+		scos(x)			返回x的反余弦值
+		asin(x)			返回x的反正弦值
+		atan(x)			返回x的反正切值
+		atan2(y,x)		返回y/x的反正切值
+		cos(x)			返回x的余弦值
+		sin(x)			返回x的正弦值
+		tan(x)			返回x的正切值
+11. Date
+	var now = new Date();
+	...
+	now.toLocalString();
+------------------------------------------------
+深入面向对象
+	0.准备知识
+		任意对象都能访问constructor属性，该属性指向该对象的构建函数
+
+		当相同功能代码出现两次以及以上的时候，就需要将代码进行封装	
+	1.构造函数的封装
+		0)传统模式
+		
+		var stu1={
+		no:1001,
+		name:"terry",
+		age:18
+		sayName:function(){
+		 alert(this.name);
+		}
+		};
+
+	1）对象工厂
+		对象没有细分
+		Object
+
+	1)var sayName=function(){
+	alert(this.name);
+	};
+
+	function creatStudent(no,name,age){
+		var student={
+		no:no,
+		name:name,
+		age:age,
+		sayName:sayName
+	}
+	return student;
+}
+	2)function studentFactory(id,name,age){
+			var stu = new Object();
+			stu.id = id;
+			stu.name = name;
+			stu.age = age;
+			return stu;
+		}
+		var s1 = studentFactory(1001,"terry",12);
+
+
+
+	3)function studentFactory(id,name,age){
+		retrun{
+		id:id,
+		name:name,
+		age:age
+		}
+	}
+	var stu1 = studentFactory(1001,"tom",12);
+
+
+		2）构造函数模式
+			1.构造函数也是函数
+			2.函数名首字母大写，驼峰命名
+			3.调用时通过new
+			function Student(no,name,age){
+				this.no = no;
+				this.name = name;
+				this.age = age;
+			}
+			var stu = new Student(1001,"terry",22);
+
+			Student{
+				1.this指向新对象
+				2.赋值操作
+				3.返回新创建对象的内存首地址
+			}
+		3）原型模式
+			每个函数都有一个与之对应的原型对象，通过prototype属性访问原型对象，默认情况下，原型对象中也有一个属性constructor，这个属性指向函数
+
+			function add(){}
+			add.prototype.constructor == add //true
+			当通过构造函数构建一个对象的时候，构造函数会在该对象的内部添加一个内部属性[[__proto__]]该属性指向原型对象
+
+			原型中constructor属性作用？
+				1.为实例对象提供访问构造函数的方法
+				2.区分对象
+			原型的作用：
+				用来存放所有实例对象共享的属性和方法
+			
+		Student.prototype.sayName=function(){
+		    
+			alert(this.name);
+		};
+		Student.prototype.sayAge=function(){
+			alert(this.age);
+		};
+		4）构造函数与原型模式组合使用！
+			构造函数中处理属性
+			原型对象中保存函数
+		Student.prototype={
+		 constructor:Student,//如果没有这个，stu1.constructor指向Object
+    		sayName:function(){
+    			alert(this.name);
+
+    		},
+    		sayAge:function(){
+    			alert(this.age);
+    		},
+		toString :function(){
+                return this.no+","+this.name+","+this.age;
+		}
+    		};
+	2.构造函数的继承
+		1） 属性继承
+			借用构造函数，本质不是继承，只是简单代码的调用
+
+		2） 方法的继承
+			原型链继承
+			function Rich(id,name,age){
+			this.id=id; 
+			this.age=age;
+			this.name=name;
+
+		}
+		function Poor(id,name,age,salary){
+			/*this.id=id;
+			this.age=age;
+			this.name=name;*/
+			//借用构造函数
+			//Rich.call(this,id,name,age);
+			Rich.apply(this,arguments);
+			this.salary=salary;
+
+		}
+		//创建了新的区域
+		//原型链继承
+		//子类的原型指向父类的对象
+		Poor.prototype=new Rich();
+		Poor.prototype.constructor=Poor;
+------------------------------------------------------------------
+1. 文档对象模型，Document Object Model
+	DOM是针对HTML和XML文档的一个API（应用程序编程接口）,DOM描绘了一个层次化的节点树，允许开发人员添加，移除，修改页面的某一部分。1998年10月DOM1级规范成为W3C的推荐标准，为基本的文档结构以及查询提供了接口。但是要注意，IE中的所有DOM对象都是以COM对象的形式实现的。这意味着IE中的DOM对象与原生JavaScript对象的行为或活动特点并不一致。
+
+	DOM可以将任何HTML或XML文档描绘成一个由多层节点构成的结构。节点分为几种不同的类型，每种类型分别表示文档中不同的信息或标记。每个节点拥有各自的特点，数据和方法，另外也有与其他节点存在某种关系。节点之间的关系构成了层次，所有页面标记则表现为一个以特定节点为根节点的树形结构。
+
+1) Node类型
+	DOM1级定义为一个Node接口，该接口将由DOM中的所有节点类型实现。除了IE之外，在其他所有浏览器中都可以访问到这个类型。javascript中所有的节点类型都继承自Node类型，所有节点类型都共享着相同的基本属性和方法。
+
+	1. 节点关系
+	属性：
+	nodeType
+	表示节点类型
+
+	Element 1;TextNode 3;Comment 8;Document 9
+
+	document 是Document构造函数的实例
+	document.body是Element构造函数的实例
+	document.body.firstChild 是Comment构造函数的实例
+
+	nodeName
+	该属性取决于节点类型，如果是元素类型，值为元素的标签名
+
+	nodeValue
+	该属性取决于节点类型，如果是元素类型(Element)，值有null
+	childNodes
+	属性，保存一个NodeList对象，NodeList是一种类数组对象用来保存一组有序的节点，NodeList是基于DOM结构动态执行查询的结果，DOM结构变化可以自动反应到NodeList对象中。访问时可以通过中括号访问，也可以通过item()方法访问。可以使用slice方法将NodeList转换为数组
+	var arr = Array.prototype.slice.call(nodes,0);
+
+	parentNode
+	指向文档树中的父节点。包含在childNodes列表中所有的节点都具有相同的父节点，每个节点之间都是同胞/兄弟节点。
+
+	previousSibling
+	兄弟节点中的前一个节点
+
+	nextSibling
+	兄弟节点中的下一个节点
+
+	firstChild
+	childNodes列表中的第一个节点
+
+	lastChild
+	childNodes列表中的最后一个节点
+
+	ownerDocument
+	指向表示整个文档的文档节点。任何节点都属于它所在的文档，任何节点都不能同时存在于两个或更多个文档中。
+	方法：
+	hasChildNodes()
+
+	在包含一个或多个子节点的情况下返回true
+
+
+2. 操作节点
+以下四个方法都需要父节点对象进行调用!
+appendChild()
+向childNodes列表末尾添加一个节点。返回新增的节点。关系更新如果参数节点已经为文档的一部分，位置更新而不插入，dom树可以看做是由一系列的指针连接起来的，任何DOM节点不能同时出现在文档中的多个位置。
+insertBefore()
+第一个参数：要插入的节点；
+第二个参数：作为参照的节点；
+被插入的节点会变成参照节点的前一个同胞节点,同时被方法返回。如果第二个参数为null将会将该节点追加在NodeList后面
+replaceChild()
+第一个参数：要插入的节点；
+第二个参数：要替换的节点；
+要替换的节点将由这个方法返回并从文档树中被移除，同时由要插入的节点占据其位置。
+removeChild()
+一个参数，即要移除的节点。
+移除的节点将作为方法的返回值。其他方法,任何节点对象都可以调用。
+
+其他方法
+cloneNode()
+用于创建调用这个方法的节点的一个完全相同的副本。有一个参数为布尔类型参数为true时，表示深复制，即复制节点以及整个子节点数。参数为false的时候，表示浅复制，只复制节点本身。该方法不会复制添加到DOM节点中的JavaScript属性，例如事件处理程序等。该方法只复制特定,子节点，其他一切都不复制。但是IE中可以复制，建议标准相同，在复制之前，移除所有事件处理程序。
+normalize()
+处理文档树中的文本节点，由于解析器的实现或DOM操作等原因，可能会出现文本节点不包含文本，或者接连出现两个文本节点，当在某个节点上调用了该方法，会删除空白节点，会找到相邻的两个文本节点，并将他们合并为一个文本节点。
+2) Document类型
+javascript通过使用Document类型表示文档。在浏览器中，document对象是HTMLDocument的一个实例，表示整个HTML页面。document对象是window对象的一个属性，因此可以直接调用。HTMLDocument继承自Document
+1. 文档子节点
+	可以继承Node中所有的属性和方法
+	属性：
+	documentElement	始终指向HTML页面中的<html>元素。
+	body			直接指向<body>元素
+	doctype			访问<!DOCTYPE>, 浏览器支持不一致，很少使用
+	title			获取文档的标题
+	URL			取得完整的URL
+	domain			取得域名，并且可以进行设置，在跨域访问中经常会用到。
+	referrer		取得链接到当前页面的那个页面的URL，即来源页面的URL
+	images			获取所有的img对象，返回HTMLCollection类数组对象
+	forms			获取所有的form对象，返回HTMLCollection类数组对象
+	links			获取文档中所有带href属性的<a>元素
+2. 查找元素
+	getElementById()
+	参数为要取得元素的ID，如果找到返回该元素，否则返回null如果页面中多个元素的ID值相同，只返回文档中第一次出现的元素。如果某个表单元素的name值等于指定的ID，该元素也会被匹配。
+	getElementsByTagName()
+	参数为要取得元素的标签名，返回包含另个或者多个元素的NodeList，在HTML文档中该方法返回的是HTMLCollection对象，与NodeList非常类似。可以通过[index/name],item(),namedItem(name)访问
+	getElementsByName()
+	参数为元素的name,返回符合条件的HTMLCollection
+	getElementsByClassName()
+	参数为一个字符串，可以由多个空格隔开的标识符组成。当元素的class属性值包含所有指定的标识符时才匹配。HTML元素的class属性值是一个以空格隔开的列表，可以为空或包含多个标识符。
+
+3) Element类型
+1. HTML元素
+	所有的HTML元素都由HTMLElement类型表示，或者其子类型表示。每个HTML元素都应具有如下一些属性以及html元素特有的属性。
+	id			元素在文档中的唯一标识符
+	title		有关元素的附加说明信息
+	className	与元素class特性对应
+	src			img元素具有的属性
+	alt			img元素具有的属性
+	lang		元素内容的语言代码，很少使用！
+	dir			语言方向，ltr,rtl 左到右，右到左、
+
+	可以通过属性访问到该属性对应的值
+1)取得属性
+	getAttribute() 参数为实际元素的属性名，calss,name,id,title,lang,dir一般只有在取得自定义特性值的情况下，才会用该方法大多数直接使用属性进行访问，比如style,onclick
+2)设置属性
+	setAttribute() 两个参数，第一个参数为要设置的特性名，第二个参数为对应的值。如果该值存在，替换。
+3)移除属性
+	removeAttribute() 移除指定的特性
+4)attributes属性，其中包含了一个NamedNodeMap,与NodeList类似。
+	getNamedItem(name)
+	removeNamedItem(name) 	从列表中删除nodeName属性等于name的值
+	setNamedItem(node)  	向列表中添加一个节点
+	item(pos)		返回位于数字pos位置处的节点
+5)创建元素
+	createElement()  	一个参数，要创建元素的标签名。
+6)元素的子节点
+	<ul>
+	<li>item1</li>
+	<li>item2</li>
+	<li>item3</li>
+	</ul>
+	ie8及一下版本浏览器	3个子节点
+	其他浏览器			7个子节点
+2. 作为文档树的文档
+	将文档看做是Element对象树，忽略文档Text,Comment节点。Element中的属性
+	children 			:类似于childNodes,返回NodeList对象，但是该对象中仅包含Element对象
+	firstElementChild		:第一个孩子元素节点
+	lastElementChild		:最后一个孩子元素节点l
+	nextElementSibling		:下一个兄弟元素节点
+	previousElementSibling		:上一个兄弟元素节点
+	childElementCount		:子元素的数量，返回值和children.length值相等
+3. 元素内容(属性)
+	innerHTML  	返回元素内容
+	textContent  	非ie浏览器
+	innerText    	ie浏览器
+	insertAjacentHTML()
+	第一个参数为位置(beforebegin,afterbegin,beforeend,afterend)，
+	第二个参数为内容
+	<div id="target">this is element html</div>
+	beforebegin     afterbegin	     beforeend 	afterend
+
+4) Text类型： 文本类型
+	文本节点。包含的是可以按照字面解释的存文本内容。
+	length
+	文本长度
+	appendData(text)
+	追加文本
+	deleteData(beginIndex,count)
+	删除文本
+	insertData(beginIndex,text)
+	插入文本
+	replaceData(beginIndex,count,text)
+	替换文本
+	splitText(beiginIndex)
+	从beginIndex位置将当前文本节点分成两个文本节点
+	substringData(beiginIndex,count)
+	从beginIndex开始提取count个子字符串
+	<span>这个是文本节点</span>
+
+	document.createTextNode()
+	创建文本节点，参数为要插入节点中的文本
+
+5) Comment类型：  注释类型
+<div id = "myDiv"><!--a comment--></div>
+<!--a comment--> Comment类型
+
+
+2. 事件(重点掌握事件三要素,事件流，事件对象，事件代理)
+
+		javascript与HTML之间的交互是通过事件实现的。事件就是文档或浏览	器窗口中发生的一些特定的交互瞬间。
+
+		事件三要素：
+		事件目标（event target） element
+		发生的事件与之相关联或与之相关的对象
+		事件处理程序（event handler） fn
+		处理或相应事件的函数
+		事件对象（event object）  {} event或window.event
+		与特定事件相关且包含有关该事件详细信息的对象。
+
+		1) 事件流
+		描述的是从页面中接受事件的顺序
+		1. 事件冒泡
+		事件开始由最具体的元素接收，然后逐级向上传播到不具体的节点。
+		<html>
+		<head></head>
+		<body>
+		<div>click me</div>
+		</body>
+		</html>
+		当点击了<div>元素，这个click事件会按照如下顺序传播
+		div->body->html->document
+		注意：IE8以及更早版本只支持事件冒泡。
+
+2. 事件捕获
+不太具体的节点更早接收事件，具体的节点到最后接收事件。当点击了<div>元素，按照如下方式触发click事件
+document->html->body->div
+3. dom事件流
+“DOM2级事件”规定了事件流包括三个阶段：事件捕获阶段，处理目标阶段和事件冒泡阶段。
+事件捕获： document->html->body
+处理目标： 事件处理
+事件冒泡： div->body->html->document
+	2) 事件处理程序
+			事件就是用户或浏览器自身执行的某种动作，响应某个事件的函数为事件处理程序，事件处理程序以"on"开头(onclick,onload)
+		1. HTML事件处理程序
+			<input type="button" value="clickMe" onclick = "alert('is clicked')">
+			不能在事件中使用未经转义的HTML语法字符
+
+			<input type="button" value="clickMe" onclick = "showMsg()">
+			<script type="text/javascript">
+			function showMsg(){
+			alert("is clicked");
+			}
+			</script>
+点击按钮会调用showMsg()函数，事件处理程序的代码在执行时，有权访问全局作用域的任何代码。
+
+2. DOM0级事件处理程序
+		通过element元素的事件属性来绑定事件处理程序
+		通过javascript制定时间事件程序的传统方式，将一个函数赋值给一个事件处理程序属性。特点是简单，跨浏览器。
+		var btn = document.getElementById("btn");
+		btn.onclick = function(){
+		alert('cliked');
+		}
+		dom0级方法制定的事件处理程序被认为是元素的方法，因此这个时候时间处理程序是在元素的作用域中运行，this指向当前元素。
+		btn.onclick = null;  //删除事件处理程序
+3. DOM2级事件处理程序
+	通过函数来绑定事件处理程序
+	addEventListener()
+	事件绑定
+	参数：
+	要绑定的事件名
+	作为事件处理的函数
+	布尔值：true在捕获阶段调用事件处理程序；false在冒泡阶段调用
+	removeEventListener()
+	事件删除
+	参数：
+	要删除的事件名
+	作为事件处理的函数
+	布尔值：true在捕获阶段调用事件处理程序；false在冒泡阶段调用
+
+	例如：
+	//事件绑定
+	var btn = document.getElementById("btn");
+	btn.addEventListener("click",function(){
+	alert(this.id); //该函数在其依附的元素的作用域中运行。
+	},false);
+	//事件移除
+	var btn = document.getElementById("btn");
+	var handler = function(){
+	alert(this.id);
+	}
+	btn.addEventListener("click",handler,false);
+	btn.removeEventListener("click",handler,false);//移除
+
+	可以添加多个事件处理程序，并且按照添加她们的顺序触发。移除事件传入的参数与添加处理程序时使用的参数相同，添加事件时如果使用匿名函数将无法删除
+4. IE事件处理程序
+	事件处理程序会在全局作用域中运行，因此this指向window对象。为一个对象添加两个相同的事件，事件处理程序的顺序是按照添加相反顺序进行处理
+attachEvent()
+	事件绑定
+	参数：
+	时间处理程序名称
+	时间处理函数
+detachEvent()
+	事件移除
+	参数：
+	时间处理程序名称
+	时间处理函数
+	事件处理程序都被添加到冒泡阶段
+
+5. 跨浏览器的事件处理程序
+	见代码 lib.js
+
+3) 事件对象
+	1. dom中的事件对象
+		在触发DOM上的某个事件时，会产生一个事件对象event,这个对象包含着所有与事件相关的信息，默认会将event对象传入到事件处理函数中
+		dom.onclick = function(event){
+		console.log(event);
+		}
+		dom.addEventListener("click",function(event){
+		console.log(event);
+		},false);
+
+		属性 				类型				说明
+		bubbles				Boolean		事件是否冒泡
+		cancelable			Boolean		是否可以取消事件默认行为
+		currentTarget			Element		当前正在处理事件的那个元素
+		eventPhase			Integer		调用事件处理程序的阶段;1，捕获 2，处于目标 3，冒泡
+		target				Element		事件目标
+		type				String		事件类型
+		trusted				Boolean		事件是否是浏览器生成的
+		preventDefault()		Function	取消事件的默认行为
+		stopPropagation()		Function	取消事件的进一步捕获或者冒泡
+
+		在事件处理程序内部，对象this始终等于currentTarget值，而target则只包含事件的实际目标。如果直接将事件处理程序指定给了目标元素，this,currentTarget,target包含相同的值。
+	2. IE中的事件对象
+		event可以作为window对象的一个属性存在，使用attachEvent添加事件处理程序的时候，event对象会作为参数传入事件处理函数中
+		dom.onclick = function(event){
+		console.log(window.event);
+		//event为window的,所以event=event?event:window.event;
+		window.event.returnValue = false;//阻止默认行为
+		window.event.cancalBubble = true;//取消冒泡
+		}
+		dom.attachEvent("onclick",function(event){
+		console.log(window.event);
+		});
+		属性				类型				说明
+		cancelBubble			Boolean		是否取消时间冒泡,值为true取消冒泡 stopPropagation()
+		returnValue			Boolean		取消时间默认行为,值为false阻止 preventDefault()
+		srcEvent			Element		时间的目标 target
+		type	
+		String		被触发的时间 的类型
+
+			removeEventListener();
+	 事件对象
+		1) IE
+			1. 获取事件对象？
+				div.onclick = function(event){
+					//event获取不到，结果undefined
+					window.event
+				}
+				div.attachEvent("onclick",function(event){
+					event 可以获取
+				});
+			2. 事件对象属性和方法
+				srcElement  类似于target
+				this
+					on绑定	this->当前元素
+					attachEvent this->window
+				cancelBubble
+					类似于 stopPropagation
+				returnValue
+					类似于 preventDefault
+
+		2) 非IE
+			1. 获取事件对象？
+				div.onclick = function(event){
+					event 可以获取
+				}
+				div.addEventListener("click",function(event){
+					event 可以获取
+				});
+
+
+3. 跨浏览器的事件对象
+	事件对象
+	目标对象
+	阻止默认行为
+	阻止冒泡
+
+4) 事件类型
+1. UI事件
+	load
+	当页面完全加载后再window上触发，当所有框架加载完毕时在框架集上触发，当图像加载完毕时在img元素上触发，当嵌入的内容加载完时在<object>触发
+	unload
+	当页面完全卸载后再window上触发，当所有框架都卸载后在框架集上触发，当嵌入的内容卸载完毕后再<object>上触发,(firefox不支持)
+	select
+	当用户选择文本框（<input>,<textarea>）中的一个或多个字符时
+	resize
+	当浏览器窗口被调整到一个新的高度或者宽度时，会触发
+	scroll
+	当用户滚动带滚动条的元素中的内容时，在该元素上触发resize,scroll会在变化期间重复被激发，尽量保持代码简单
+2. 焦点事件
+	blur
+	元素失去焦点的时候触发
+	focus
+	元素获得焦点的时候触发，不支持冒泡
+	//IE支持
+	focusin
+	与focus等价，支持冒泡
+	focusout
+	与blur等价，支持冒泡
+
+5)支持子元素(支持事件代理)
+click mouseout mouseover focusin focusout
+3. 鼠标与滚轮事件
+		click
+		点击主鼠标按钮或者按下回车按键的时候触发。只有在一个元素上相继发生mousedown,mouseup事件，才会触发click事件
+		dblclick
+		双击主鼠标按钮时触发.只有在一个元素上相继触发两次click时间才会触发dbclick事件
+		mousedown
+		任意鼠标按钮按下时触发
+		mouseup
+		释放鼠标按钮触发
+		mousemove
+		鼠标在元素内部移动的时候重发触发
+		mousewheel
+		滚轮事件
+		mouseover
+		鼠标位于元素外部，将其首次移入另一个元素边界之内时触发【支持子元素】
+		mouseenter
+		鼠标光标从元素外部首次移动到元素范围内激发，不冒泡。【不支持子元素】
+		mouseout
+		在位于元素上方的鼠标光标移入到另外一个元素中。【支持子元素】在被选元素上与mouseleave效果相同
+		mouseleave
+		在位于元素上方的鼠标光标移动到元素范围之外时触发，不冒泡【不支持子元素】
+4. 相关元素,event特殊属性
+	1.客户区坐标位置
+	clientX,clientY 事件发生时，鼠标指针在视口中的水平和垂直坐标
+	2.页面坐标位置
+	pageX,pageY 事件发生时，鼠标指针在页面本身而非视口的坐标，页面没有滚动的时候，	pageX和pageY的值与clientX和clientY值相等
+3.屏幕位置
+screenX,screenY
+4.修改键
+	值为boolean类型，用来判断对应的按键是否被按下
+	shiftKey
+	ctrlKey
+	altKey
+metaKey
+5.鼠标按钮
+	mousedown,mouseup，该事件的event对象中包含了button属性，表示按下或释放的按钮。
+	0表示主鼠标按钮
+	1表示中间的滚动按钮
+	2表示次鼠标按钮
+5. 键盘与文本事件
+keydown		按下键盘任意键时触发，如果按住不放会重复触发此事件
+keypress	按下键盘字符键时触发，如果按住不放会重复触发此事件
+keyup		释放键盘上键时触发
+当键盘事件发生时，event对象的keyCode属性中会包含一个代码与键盘上的特定键对应，对数字字母键，keyCode属性的值与ASCII码中对应的小写字母和数字编码相同
+详见keycode.txt
+
+代码的封装,兼容性较好:
+var eventUtil={
+	bind:function(element,type,handler){
+     if(element.addEventListener){
+       element.addEventListener(type,handler,false);
+
+     }else if(element.attachEvent){
+     	element.attachEvent("on"+type,handler);
+
+     }else{
+     	element["on"+type]=handler;
+     }
+
+	},
+	unbind:function(element,type,handler){
+		if(element.removeEventListener){
+			element.removeEventListener(type,handler);
+		}else if(element.detachEvent){
+			element.detachEvent("on"+type,handler);
+		}else{
+			element["on"+type]=null;
+		}
+	},
+	//返回事件对象
+	getEvent:function(event){
+		return event?event:window.event;
+
+	},
+	//获取目标
+	getTarget:function(event){
+		return event.target||event.srcElement;
+	},
+	//阻止默认行为
+	preventDefault:function(event){
+		if(event.preventDefault){
+			event.preventDefault();
+		}else{
+			event.returnValue=false;
+		}
+	},
+	//阻止事件冒泡
+	stopPropagation:function(event){
+		if(event.stopPropagation){
+			event.stopPropagation();
+		}else{
+			event.cancelBubble=true;
+		}
+	}
+
+};
+
+
+
+
+
+1. BOM 
+	浏览器对象模型
+    BOM提供了很多对象，用于访问浏览器的功能，这些功能与任何网页内容无关。BOM的核心对象是window，它表示浏览器的一个实例，在浏览器中window对象有双重角色既是通过javascript访问浏览器窗口的一个接口，又是ECMAScript规定的Global对象。
+    1.窗口位置
+      	screenLeft和screenTop属性返回窗口相对于屏幕的X和Y坐标。(火狐浏览器不支持)
+      	screenX和screenY属性返回窗口相对于屏幕的X和Y坐标。(ie浏览器不支持)
+      	pageXOffset 设置或返回当前页面相对于窗口显示区左上角的 X 位置。
+      	pageYOffset 设置或返回当前页面相对于窗口显示区左上角的 Y 位置。
+      		IE8及更早IE版本不支持该属性,但可以使用 "document.body.scrollLeft" 和 "document.body.scrollTop" 属性 。
+
+    2.窗口大小
+      	innerWidth	页面视图区的宽度
+      	innerHeight	页面视图区的高度
+      	outerWidth	浏览器窗口的宽度
+      	outerHeight	浏览器窗口的高度	
+      		所有主流浏览器都支持innerWidth,innerHeight,outerWidth,outerHeight 属性。注意：IE8及更早IE版本不支持这些属性。
+    3. scrren对象
+    	屏幕总宽度/高度: 
+			screen.width
+			screen.height
+		可用宽度/高度: 
+			screen.availWidth
+			screen.availHeight
+		颜色深度: 
+			screen.colorDepth
+		颜色分辨率: 
+			screen.pixelDepth
+    4.导航和打开窗口
+      	window.open() 
+      		可以导航到一个特定的URL，也可以打开一个新的浏览器窗口,该方法会返回一个指向新窗口的引用。引用的对象与其他的window对象类似。
+      		<a href="URL" target=""></a>
+	        参数：
+				1)要加载的URL
+		 		2)窗口目标,框架名
+			     	特殊名：
+			       	_self	当前浏览器页面
+			       	_parent	当前页面父页面
+			       	_top	当前页面顶级页面
+			       	_blank	新页面
+				3) 一个特定字符串
+					是用逗号分隔的设置字符串
+					channelmode=yes|no|1|0 	是否要在影院模式显示 window。默认是没有的。仅限IE浏览器
+					directories=yes|no|1|0 	是否添加目录按钮。默认是肯定的。仅限IE浏览器
+					fullscreen=yes|no|1|0 	浏览器是否显示全屏模式。默认是没有的。在全屏模式下的 window，还必须在影院模式。仅限IE浏览器
+					width=pixels 			窗口的宽度.最小.值为100
+					height=pixels 			窗口的高度。最小.值为100
+					left=pixels 			该窗口的左侧位置
+					location=yes|no|1|0 	是否显示地址字段.默认值是yes
+					menubar=yes|no|1|0 		是否显示菜单栏.默认值是yes
+					resizable=yes|no|1|0 	是否可调整窗口大小.默认值是yes
+					scrollbars=yes|no|1|0 	是否显示滚动条.默认值是yes
+					status=yes|no|1|0 		是否要添加一个状态栏.默认值是yes
+					titlebar=yes|no|1|0 	是否显示标题栏.被忽略，除非调用HTML应用程序或一个值得信赖的对话框.默认值是yes
+					toolbar=yes|no|1|0 		是否显示浏览器工具栏.默认值是yes
+					top=pixels 				窗口顶部的位置.仅限IE浏览器
+					
+	 			4)表示新页面是否取代浏览器历史记录中当前加载页面的布尔值
+
+	 		如果传递了第二个参数，而且该参数是已有窗口或框架的名称，就会在具有该名称的窗口或框架中加载第一个参数指定的URL。
+	  		如果给window.open传递的第二个参数并不是一个已经存在的窗口或框架，那么该方法就会根据在第三个参数位置上传入的字符串创建一个新窗口或新标签页
+	  		
+	  		调整窗口大小
+	         	//调整到100*100
+		      	resizeTo(100,100);//接受浏览器窗口的新高度和新宽度
+		      	//调整到200*150
+		      	resizeBy(100,50); //接受新窗口与原窗口的宽度和高度之差
+	      	移动窗体
+	      		多用于新建窗体
+	      		window.moveTo(0,0); 接受的是新位置的x和y坐标值
+	      		window.moveBy(0,100);接受的是在水平和垂直方向上移动的像素值。
+	      	滚动条
+      			scrollBy(xnum,ynum) 方法可把内容滚动指定的像素数。注意： 要使此方法工作 window 滚动条的可见属性必须设置为true！
+      			scrollTo(xpos,ypos) 方法可把内容滚动到指定的坐标。
+
+
+			例如：
+			创建新窗体
+		    var w = window.open("http://www.baidu.com","_blank","toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=400, height=400");
+		    改变窗体大小
+			w.resizeTo(400,200);
+
+    5.间歇调用和超时调用
+		javascript是单线程语言，但是可以通过超时值和间歇时间来调度代码在特定时刻执行
+		1) setTimeout();
+	  		该方法返回一个数值ID，表示超时调用，这个超时调用ID是计划执行代码的唯一标识符通过它来取消超时调用。可以通过clearTimeout(ID);
+	 		参数：
+	 		 	1.要执行的代码
+				2.以毫秒表示的时间。
+			例如: 
+				一秒后调用
+				var id = setTimeout(function(){
+					alert(1000);
+				},1000);
+				console.log(id);
+				//清除
+				clearTimeout(id);
+		2) setInterval();
+	  		按照指定的时间间隔重复执行代码，直到间歇调用被取消或页面被卸载。调用该方法也会返回一个间歇调用ID，该ID可以用户在将来某个时刻取消间歇调用
+	  		参数：
+	  			1.要执行的代码
+				2.以毫秒表示的时间。
+	  			clearInterval(ID);  //取消间歇调用
+
+		3) 使用超时调用来模拟间歇调用
+			var num = 0;
+			var max = 10;
+			function incrementNum(){
+				num ++;
+				if(num < max){
+					alert(num);
+					setTimeout(incrementNum,500);
+				}else{
+					alert("Done"+num);
+				}
+			}
+			setTimeout(incrementNum,500);
+		4) setTimeout，setInterval配合完成调用函数
+			function invoke(f,start,interval,end){
+				if(!start){
+					start = 0;
+				}
+				if(arguments.length<=2){
+					setTimeout(f,start);
+				}else {
+					function repeat(){
+						var h = setInterval(f,interval);
+						if(end){
+							setTimeout(function(){
+								clearInterval(h);
+							},end);
+						}
+					}
+					setTimeout(repeat,start);
+				}
+			}
+    6. 系统对话框
+      	alert(),confirm(),prompt()方法可以调用系统对话框向用户显示消息。显示这些对话框的时候代码会停止执行，关掉这些对话框后代码又会恢复执行。
+		
+		alert()
+			该方法接受一个字符串并将其显示给用户。该对话框会包含指定的文本和一个"OK"按钮。主要用来显示警告信息
+		confirm()
+			确认对话框，显示包含指定的文本和一个"OK"按钮以及"Cancel"按钮。该方法返回布尔值，true表示单击了OK，false表示单击了cancel或者X按钮
+			if(confirm("确定吗？？")){
+				alert("好！");
+			}else{
+				alert("切！");
+			}
+		prompt() 
+			会话框，提示用户输入一些文本。显示包含文本，ok按钮,cancel按钮以及一个文本输入域，以供用户在其中输入内容。传入两个参数，要显示给用户的文本提示和文本输入域的默认值。
+
+			如果用户单击OK按钮，该方法返回输入域的值，如果用户单击了Cancel或者关闭对话框该方法返回null.
+
+    7. location对象
+    	是最有用的BOM对象之一，提供了与当前窗口中加载的文档有关的信息，还提供一些导航功能。location是个神奇的对象，既是window的对象也是document的对象。
+        console.log(window.location == document.location);//true
+      	属性：
+	        host		返回服务器名称和端口号
+			hostname	返回不带端口号的服务器名称
+			href		返回当前加载页面的完整URL
+			pathname	返回URL的目录和文件名
+			port		返回URL中指定的端口号
+			protocol	返回页面使用的协议
+			search		返回URL的查询字符串。这个字符串以问号开头
+
+		方法：
+		    assign()	传递一个url参数，打开新url，并在浏览记录中生成一条记录。
+		    replace() 	参数为一个url,结果会导致浏览器位置改变，但不会在历史记录中生成新记录
+      		reload()	重新加载当前显示的页面，参数可以为boolean类型，默认为false,表示以最有效方式重新加载，可能从缓存中直接加载。如果参数为true,强制从服务器中重新加载
+
+		为location.href; window.location 设置为一个URL值，也会以该值调用assign()方法。以下三句话效果一样
+			window.location="http://www.baidu.com";
+			location.href="http://www.baidu.com"
+			location.assign("http://www.baidu.com");
+      	
+	8.history对象
+      	该对象保存着用户上网的历史记录。出于安全方面的考虑，开发人员无法得知用户浏览过的URL，不过借由用户访问过的页面列表，同样可以在不知道实际URL的情况下实现后退前进,注意： 没有应用于History对象的公开标准，不过所有浏览器都支持该对象。
+      	length 		返回历史列表中的网址数
+      		注意：Internet Explorer和Opera从0开始，而Firefox、Chrome和Safari从1开始。
+      	back() 		加载 history 列表中的前一个 URL
+		forward() 	加载 history 列表中的下一个 URL
+		go() 		加载 history 列表中的某个具体页面
+			负数表示向后跳转，正数表示向前跳转。
+
+2. 特殊的css
+  	1) 元素几何尺寸
+   		getBoundingClientRect()
+    	left/x	元素左上角的x坐标  
+    	top/y	元素左上角的y坐标
+    	right	元素右上角的x坐标 
+    	bottom	元素右上角的y坐标
+    	with	元素宽度
+    	height	元素高度
+  	2) 任何元素的只读属性
+    	以css像素返回它的屏幕尺寸，返回的尺寸包括元素的边框和内边距
+      		offsetWidth	
+      		offsetHeight
+    	坐标，返回元素的X和Y坐标。
+      		offsetLeft
+      		offsetTop
+    	父元素，
+      		offsetParent 指定这些属性相对的父元素
+    	clientWidth
+    	clientHeight  
+		类似于offsetWidth,offsetHeight，但是他们不包含边框，只包含内容和内边距
+
+    	scrollWidth
+    	scrollHeight
+    	元素的内容+内边距+任何溢出内容的尺寸。
+
+
+	3) 第三个维度 ： z-index
+  		left,right,top,bottom属性是容器元素中的二维坐标中指定X,Y坐标,z-index定义了第三个维度：它允许元素的堆叠次序，并指示两个或多个重叠元素中的哪一个元素应该绘制在其他的上面。默认值为0，可以是负数也可以是正数，当两个或者多个元素重叠在一起的时候，他们是按照从低到高的z-index顺序绘制。只针对兄弟元素应用堆叠效果。
+
+	4) 元素的显示和可见性
+  		visibility:
+			hidden  元素不可见，但是在文档布局中保留了它的空间。
+			visible	元素可见
+  		display	
+			none	元素不可见，在文档布局中不给它分配空间，它的各边元素会合拢，就当它不存在过。在展开和折叠轮廓的效果时，display属性很有用。
+  
+  		不过visibility,display对绝对定位和固定定位的元素的影响是等价的。
+	5) 颜色，透明度
+  		opacity 透明度：0~1之间的数字
+  		filter: IE中表示透明度
+		常用表示透明度的方法
+		  		opacity: .75;
+		  		filter:alpha(opacity=75)
+3. 脚本化内联样式
+	style 属性，该属性的值不是字符串，而是一个CSSStyleDeclaration对象，该对象代表了HTML代码中通过style指定的css属性。javascript中的css属性大多与标签中的css属性相同，但是如果css样式属性在名字中出现了连字符，该属性名的格式应该是移除连字符，将每个连字符后面紧接着的字母大写，如 
+		background-color =>e.backgroundColor
+		e.style.fontSize = "24px";
+		e.style.fontWeight = "bold";
+		e.style.color = "blue";
+	cssText ：CSS单个字符串属性
+  	//两者都可设置e的样式属性为字符串s
+  	s.setAttribute("style",s);
+  	s.style.cssText = s;
+
+  	//两者都可以查询元素的内联样式
+  	s = e.getAttribute("style");
+  	s = e.style.cssText;
+  
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------
+Ajax
+	1. Ajax
+		是Asynchronous[ə'siŋkrəns] JavaScript and XML的缩写，异步的JavaScript和XML. Ajax描述了一种主要使用脚本操作HTTP的Web应用架构，Ajax应用的主要特点是使用脚本操纵HTTP和Web服务器进行数据交换，不会导致页面重载。
+	2. HTTP
+		超文本传输协议(HyperText Transfer Protocol)规定了Web浏览器如何从Web服务器获取文档和向Web服务器提交表单内容，以及Web服务器如何响应这些请求和提交。通常，HTTP并不在脚本的控制下，只是当用户单击链接，提交表单和输入URL时才发生。但是，用JavaScript代码操纵HTTP是可行的。
+		1) HTTP请求
+			HTTP请求方法或动作
+			正在请求的URL
+			请求头集合，其中可能包含身份验证信息(可选)
+			请求体(可选)
+		2) HTTP响应
+			一个数字和文本组成的返回码，用来显示请求的成功和失败
+			一个响应头集合
+			响应体
+
+	3. XMLHttpRequest
+		浏览器在XMLHttpRequest类上定义了它们的HTTP API,这个类的每个实例都表示一个独立的请求/响应对，并且这个对象的属性和方法允许指定请求细节和提取响应数据。很多年前Web浏览器就开始支持XMLHttpRequest，并且其API已经到了W3C指定标准的最后阶段。同时W3C正在指定“2级XMLHttpRequest”标准草案。
+
+		注意：在使用XMLHttpRequest时，必须将html部署到web服务器中。
+
+		1) 指定请求
+			1. 实例化
+				var request = new XMLHttpRequest();
+				request为实例化的XMLHttpRequest对象，该对象可以重用，但是这将会终止之前通过该对象挂起的任何请求。
+
+			2. 指定请求
+				open()
+				参数：
+					1.指定HTTP方法或动作，这个字符串不区分大小写，通常大家用大写字母来匹配HTTP协议。取值可以为：GET/POST/HEAD/DELETE/OPTIONS/PUT 
+						GET	:用于常规请求，适用于URL完全指定请求资源，请求对服务器没有任何副作用，服务器的响应是可缓存的
+						POST:用于HTML表单，它在请求主体中包含额外数据，且这些数据常存储到服务器上的数据库中。相同URL的重复POST请求从服务器得到的响应可能不同，同时不应该缓存使用这个方法的请求。
+					2.URL,请求的主题，是相对于文档的URL。跨域请求会报错。
+					3.Boolean类型的值，如果值为false代表同步请求，send()方法将阻塞直到请求完成。这种情况下无需使用事件处理函程序，一旦send()返回，只需检查XMLHttpRequest对象的status和responseText属性。
+				request.open("GET","data.xml");
+
+3. 设定请求头
+	setRequestHeader();
+	如果有请求头，需要调用该方法进行设定。
+	参数：
+	1.key
+	2.value
+				
+		request.setRequestHeader("Content-type","text/plain;charset=UTF-8");
+		注意：
+		XMLHttpRequest将自动添加以下这些请求头以防止伪造，我们无法向setRequestHeader()传递以下请求头。
+		Accept-Charset		TE 				Content-Transfer-Encoding
+		Accept-Encoding		Date			Trailer
+		Connection		Expect			Transfer-Encoding
+		Content-Length		Host			Upgrade
+		Cookie 			Keep-Alive		User-Agent
+					Cookie2			Referer			Via
+4. 指定可选的请求主体并向服务器发送
+			send()
+			参数：
+			请求主体内容，如果没有，为null,或者省略。
+
+			/*
+		  	  使用POST方法发送纯文本给服务器
+			*/
+			function postMessage(url,msg){
+				var request = new XMLHttpRequest();
+				request.open("POST",url);
+				request.setRequestHeader("Content-type","text/plain;charset=UTF-8");
+				request.send(msg);
+			}
+			
+		//使用get方法接收
+
+		//封装 get请求
+		
+		function getTextData(url,callback){
+		//发送请求
+		var request =new XMLHttpRequest();
+		request.open("GET",url);
+		request.setRequestHeader("Content-type","text/plain;charset=UTF-8");
+		request.send();
+		//处理响应
+		request.onreadystatechange = function(){
+		if(request.readyState === 4 && request.status === 200){
+			//获取到响应的文本数据
+			var text = request.responseText;
+			//var dom = request.responseXML; //
+			callback(text);
+		}
+		};
+		}
+
+		
+		2)  取得响应
+			status		以数字形式返回HTTP状态码	
+				200	OK
+				404	Not Found
+			  	403 forbidden	JSONP
+				500 后台代码异常
+			statusText	以文本形式返回HTTP状态码	OK	Not Found
+			getResponseHeader()	获取指定响应头
+			getAllResponseHeaders()	获取所有响应头
+			responseText		获取文本形式的响应体
+			responseXML		获取Document形式的响应体
+			readyState		返回HTTP请求状态
+				0	open()尚未调用	UNSENT
+				1	open()已调用		OPENED
+				2	接收到头信息		HEADERS_RECEIVED
+				3 	接收到响应主体		LOADING
+				4 	响应完成			DONE
+			readystatechange 请求状态改变事件
+				当readyState值改变为4或服务器的响应完成时，所有的浏览器都触发该事件
+
+			/*
+			  获取HTTP响应
+			*/
+			function getText(url,callback){
+				var request = new XMLHttpRequest();
+				request.open("GET",url);
+				request.onreadystatechange = function(){
+					//如果请求完成，并且请求成功
+					if(request.readyState === 4 && request.status ===200){
+						var type = request.getResponseHeader("Content-type");
+						if(type.match(/^text/)){	//如果响应是文本
+							callback(request.responseText);//执行回调函数
+						}
+					}
+				};
+				request.send(null);
+			}
+		3) 响应解码
+			1.MIME类型为text/plain,text/html,text/css 文本类型时，可以使用responseText属性解析
+			2.MIME类型为XML文档类型时，使用responseXML属性解析
+			3.如果服务器发送对象，数组这样的结构化数据作为其响应，他应该传输JSON编码的字符串数据。通过responseText接受到它，可以把它传递给JSON.parse()方法来解析。
+
+	4.编码请求主体
+		HTTP POST请求包括一个请求主体，它包含客户端传递给服务器的数据。
+		1) 表单编码的请求
+			当用户提交表单时，表单中的数据（每个表单元素的名字和值）编码到一个字符串中并随请求发送。对表单数据的编码方案：对每个表单元素的名字和值执行普通的URL编码（使用十六进制转义码替换特殊字符），使用等号把编码后的名字和值分开，并使用"&"符号分开键/值对。表单数据编码格式有一个正式的MIME类型 application/x-www-form-urlencoded
+
+			当使用POST方式提交这种顺序的表单时，必须设置"Content-Type"请求头为"application/x-www-form-urlencoded"
+
+			用于HTTP请求的编码对象
+
+			function encodeFormData(data){
+				if(!data){
+					return "";
+				}
+				var pairs = [];
+				for(var name in data){
+					if(!data.hasOwnProperty(name)){
+						continue;
+					}
+					if(typeof data[name] == "function"){
+						continue;
+					}
+					var value = data[name].toString();
+					name = encodeURIComponent(name).replace("%20","+");//编码名字
+					value = encodeURIComponent(value).replace("%20","+");//编码值
+					pairs.push(name+"="+value);
+				}
+				return pairs.join('&');
+			}
+
+
+			
+			使用表单编码数据发起一个HTTP POST请求
+			function postData(url,data,callback){
+				var request = new XMLHttpRequest();
+				request.open("POST",url);
+				reqeust.onreadystatechangze = function(){
+					if(request.readyState === 4 && callback){
+						callback(request);
+					}
+				};
+				//设置请求头
+				request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+				//发送表单编码的数据
+				request.send(encodeFormData(data));
+			}
+
+			使用表单编码数据发起GET	请求
+			function getData(url,data,callback){
+				var request = new XMLHttpRequest();
+				request.open("GET",url+"?"+encodeFormData(data));
+				reqeust.onreadystatechange = function(){
+					if(request.readyState === 4 && callback){
+						callback(request);
+					}
+				};
+				request.send(null);
+			}
+
+		2) JSON格式的编码请求
+			近年来，作为Web交换格式的JSON已经得到了普及。
+			function postJSON(url,data,callback){
+				var request = new XMLHttpRequest();
+				request.open("POST",url);
+				reqeust.onreadystatechange = function(){
+					if(request.readyState === 4 && callback){
+						callback(request);
+					}
+				};
+
+				request.setRequestHeader("Content-Type","application/json");
+				request.send(JSON.stringify(data));
+			}
+		3) XML编码的请求
+			XML有时也用于数据传输的编码，但是较少
+			//doc表示一个XML DOM
+			function postXML(url,doc,callback){
+				var request = new XMLHttpRequest();
+				request.open("POST",url);
+				reqeust.onreadystatechange = function(){
+					if(request.readyState === 4 && callback){
+						callback(request);
+					}
+				};
+				//自动设置合适的头部。
+				request.send(doc);
+			}
+	5. 中止请求和超时
+		function getData(url,timeout,callback){
+			var request = new XMLHttpRequest();
+			var flag = false;
+			var timer = setTimeout(function(){
+				flag = true;
+				request.abort();//中止请求
+			},timeout);
+			request.open("GET",url+"?"+encodeFormData(data));
+			reqeust.onreadystatechange = function(){
+				if(request.readyState !== 4 ){
+					return;
+				}
+				if(timeout){
+					return;	//如果超时返回
+				}else{
+					clearTimeout(timmer); 
+				}
+				if(request.status === 200){
+					callback(request);
+				}
+			};
+			request.send(null);
+		}
+	6. 跨域HTTP请求
+		作为同源策略的一部分，XMLHttpRequest对象通常仅可以发起和文档具有相同服务器的HTTP请求。可以在<form>,<iframe>元素中使用跨域URL，但因为同源策略，浏览器不允许原始脚本查找跨域文档内容。不过我们又发现，Web页面上调用js文件时则不受是否跨域的影响（不仅如此，我们还发现凡是拥有”src”这个属性的标签都拥有跨域的能力，比如<script>、<img>、<iframe>。
+
+		1) JSONP
+			为了便于客户端使用数据，逐渐形成了一种非正式传输协议，人们把它称作JSONP，该协议的一个要点就是允许用户传递一个callback参数给服务端，然后服务端返回数据时会将这个callback参数作为函数名来包裹住JSON数据，这样客户端就可以随意定制自己的函数来自动处理返回数据了。
+			1. js跨域访问
+				远程服务器下 文件remote.js
+					alert('我是远程文件');
+				本地服务器下 文件jsonp.html
+					<script type="text/javascript" src="http://otherHost/remote.js"></script>
+				这时候会alert,说明跨域访问调用成功
+
+			2. 远程调用本地代码 　
+				远程服务器下 文件remote.js
+					localHandler({"result":"我是远程js带来的数据"});
+				本地服务器下 文件jsonp.html
+					var localHandler = function(data){
+				        alert('我是本地函数，可以被跨域的remote.js文件调用，远程js带来的数据是：' + data.result);
+				    };
+    				<script type="text/javascript" src="http://otherHost/remote.js"></script>
+
+				eg:
+				<script>
+				function handler(data){
+					console.log(data);
+				}
+				</script>
+				<script src="http://172.20.10.10:80/web1601/js_day14/data/students.js"></script>
+
+				students.js文件：
+				handler('[{"name":"licy"},{"age":"12"}]');
+
+			3. 动态调用
+				远程服务器下 文件remote.js
+					flightHandler({
+						"code": "CA1998",
+						"price": 1780,
+						"tickets": 5
+					});
+				本地服务器下 文件jsonp.html
+					// 得到航班信息查询结果后的回调函数
+				    var flightHandler = function(data){
+				        try{
+				        	alert('你查询的航班结果是：票价 ' + data.price + ' 元，' + '余票 ' + data.tickets + ' 张。');
+				        }finally{
+				        	script.parentNode.removeChild(script);
+				        }
+				    };
+				    // 提供jsonp服务的url地址（不管是什么类型的地址，最终生成的返回值都是一段javascript代码）
+				    //调用的url中传递了一个code参数，告诉服务器我要查的是CA1998次航班的信息，而callback参数则告诉服务器，我的本地回调函数叫做flightHandler，所以请把查询结果传入这个函数中进行调用。
+				    var url = "jsonp.js?code=CA1998&callback=flightHandler";
+				    // 创建script标签，设置其属性
+				    var script = document.createElement('script');
+				    script.setAttribute('src', url);
+				    // 把script标签加入head，此时调用开始
+				    document.getElementsByTagName('head')[0].appendChild(script);	
+			4. jsonp封装
+				getJSONP.counter = 0;//回调函数名称计数器
+				function getJSONP(url,callback){
+					var cbnum = "cb"+getJSONP.counter++;//cb0
+					var cbname = "getJSONP."+cbnum;//getJSONP.cb0
+
+					if(url.indexOf("?") === -1){
+						url += "?jsonp="+cbname;//?jsonp=getJSONP.cb0
+					}else{
+						url += "&jsonp="+cbname;
+					}
+
+					var script = document.createElement("script");
+					//为每个请求创建了一个全新的内部回调函数，作为getJSON函数的一个属性储存。getJSONP[cb0] = function(){}
+					getJSONP[cbnum]= function(response){
+						try{
+							callback(response);
+						}finally{
+							//清理工作：删除回调函数
+							delete getJSONP[cbnum];//移除script元素
+							script.parentNode.removeChild(script);	
+						}
+					};
+					script.src = url;
+					document.body.appendChild(script);
+				}
+				//调用
+				getJSONP("getAllStudents.action?clazz=1",function(response){
+					//处理
+					...
+				});
+
+				例如：
+				getJSONP.counter = 0;//回调函数名称计数器
+				//getJSONP.cb0('[{"name":"lao"},{"age":"20"}]');和getJSONP.cb1('[{"name":"licy"},{"age":"12"}]');写在不同的js文件中
+				//如果写在一个文件中会报错//getJSONP.counter = 0;回调函数名称计数器
+				getJSONP("http://otherHost/student2.js",function(data){
+					console.log(data);
+				});
+				getJSONP("http://otherHost/student3.js",function(data){
+				console.log(data);
+				});
+
+		2) CORS(跨域资源共享，Cross-Origin Resource Sharing)
+			CORS是W3C的一个工作草案，定义了在必须访问跨域资源时，浏览器和服务器应该怎么沟通，CORS背后的思想是使用自定义的HTTP头部让浏览器与服务器进行沟通，从而决定请求或响应应该是成功还是失败
+				例如：
+					当前域为 http://www.briup.com
+				如果远程服务器认为这个请求可以接受，就在Accept-Control-Allow-Origin头部中回发相同的信息
+					Accept-Control-Allow-Origin:http://www.briup.com
+				如果没有这个头部，或者有这个头部但源信息不匹配，浏览器会驳回请求。
+
+
+附：
+1. JSON
+	JSON能够以非常简单的方式来描述数据结构，XML能做的它都能做，因此在跨平台方面两者完全不分伯仲。以下是JSON规则：
+	1) JSON只有两种数据类型描述符，大括号{}和方括号[]其余英文冒号:是映射符，英文逗号,是分隔符，英文双引号""是定义符。
+	2) 大括号{}用来描述一组“不同类型的无序键值对集合”（每个键值对可以理解为OOP的属性描述），方括号[]用来描述一组“相同类型的有序数据集合”（可对应OOP的数组）。
+	3) 上述两种集合中若有多个子项，则通过英文逗号,进行分隔。
+	4) 键值对以英文冒号:进行分隔，并且建议键名都加上英文双引号”"，以便于不同语言的解析。
+	5) JSON内部常用数据类型无非就是字符串、数字、布尔、日期、null 这么几个，字符串必须用双引号引起来，其余的都不用，日期类型比较特殊，这里就不展开讲述了，只是建议如果客户端没有按日期排序功能需求的话，那么把日期时间直接作为字符串传递就好，可以省去很多麻烦。
+2. 编码方式
+	encodeURI 和 encodeURIComponent都是ECMA-262标准中定义的函数,所有兼容这个标准的语言（如JavaScript, ActionScript）都会实现这两个函数。它们都是用来对URI （RFC-2396）字符串进行编码的全局函数，但是它们的处理方式和使用场景有所不同。为了解释它们的不同，我们首先需要理解RFC-2396中对于URI中的字符分类
+		1) 保留字符（reserved characters）：这类字符是URI中的保留关键字符，它们用于分割URI中的各个部分。这些字符是：";"  "/"  "?"  ":"  "@"  "&" "=" "+"  "$" ","
+		2) Mark字符（mark characters）：这类字符在RFC-2396中特别定义，但是没有特别说明用途，可能是和别的RFC标准相关。 这些字符是："-"  "_" "." "!" "~"  "*" "'"  "(" ")"
+		3) 基本字符（alphanum characters）：这类字符是URI中的主体部分，它包括所有的大写字母、小写字母和数字
+
+	在介绍完上面三类字符串后，我们就非常容易来解释encodeURI和encodeURIComponent函数的不同之处了：
+		1) encodeURI: 该函数对传入字符串中的所有非（基本字符、Mark字符和保留字符）进行转义编码（escaping）。所有的需要转义的字符都按照UTF-8编码转化成为一个、两个或者三个字节的十六进制转义字符（％xx）。例如，字符空格" "转换成为"%20"。在这种编码模式下面，需要编码的ASCII字符用一个字节转义字符代替，在\u0080和\u007ff之间的字符用两个字节转义字符代替，其他16为Unicode字符用三个字节转义字符代替
+		
+		2) encodeURIComponent: 该函数处理方式和encodeURI只有一个不同点，那就是对于保留字符同样做转义编码。例如，字符":"被转义字符"%3A"代替
+		
+	之所以有上面两个不同的函数，是因为我们在写JS代码的时候对URI进行两种不同的编码处理需求。encodeURI可以用来对完整的URI字符串进行编码处理。而encodeURIComponent可以对URI中一个部分进行编码，从而让这一部分可以包含一些URI保留字符。这在我们日常编程中是十分有用的。比如下面的URI字符串：
+		http://www.mysite.com/send-to-friend.aspx?url=http://www.mysite.com/product.html
+	在这个URI字符串中。send-to-friend.aspx页面会创建HTML格式的邮件内容，里面会包含一个链接，这个链接的地址就是上面URI字符串中的url值。显然上面的url值是URI中的一个部分，里面包含了URI保留关键字符。我们必须调用encodeURIComponent对它进行编码后使用，否则上面的URI字符串会被浏览器认为是一个无效的URI。正确的URI应该如下：
+		http://www.mysite.com/send-to-friend.aspx?url=http%3A%2F%2Fwww.mysite.com%2Fproduct.html 
+
+3. GET请求（明信片）
+	a.html  -> b.html
+	携带参数：
+		a.html?key1=val1&key2=val2
+
+	浏览器地址栏：
+	getAllStudents.action?clazz=三年二班&gender=男
+
+4. POST提交(信)
+	a.html -> b.html
+	浏览器地址栏：
+	getAllStudents.action
+	参数: 保存在请求体中。
+------------------------------------------------------------------------------------------------
+jQuery:
+1. 发展历程:Javascript到jQuery：
+	1) Javascript弊端：
+	1.复杂的文档对象模型（DOM）
+    	2.不一致的浏览器实现
+    	3.缺乏便捷的开发调试工具-firebug
+    2) Javascript库
+        为了简化Javascript的开发，Javascript库封装了很多预定义的对象和使用函数。
+    3) jQuery
+        JQuery就是js的一个库(其实就是别人给我们封装好的js文件,简化我们平时的js中的代码操作)。jQuery 简洁的语法和跨平台的兼容性，极大的简化了Javascript开发人员遍历HTML文档，操作DOM，处理事件，执行动画和开发AJAX(Javascript + xml + json )，其理念：write less,do more
+        jQuery优势：
+			1 轻量级
+		    2 强大的选择器  
+		    3 出色的DOM操作的封装
+		    4 可靠的事件处理机制 
+		    5 完善的Ajax,$.ajax()无需关心复杂的浏览器兼容性和XMLHttpRequest对象的创建和使用
+		    6 不污染顶级变量，只建立一个名为jQuery对象，其所有函数方法都在这个对象之下
+		    7 出色的浏览器兼容性
+		    8 链式操作方式，发生在同一个jquery对象上的一组动作，可以直接连写而不用重复获取对象
+
+		jquery库类型
+			一般jquery库都有两个，一个为学习版，一个为项目版
+    		完整版本	：  jquery.js 		主要用于测试，学习和开发
+   			mini版本	：  jquery.min.js 	主要用于产品和项目
+2. jQuery的使用
+  	jQuery不需要安装，想要在某个页面上使用jQuery时，只需要在相关的html中引入jQuery的库文件即可。
+
+3. jQuery函数
+	jQuery库只提供了一个叫jQuery的函数，该函数中以及该函数的原型中定义了大量的方法，方便jQuery对象和jQuery函数调用。
+	jQuery函数具有四种参数：
+      	1) 参数为选择器（字符串）
+       	 	jQuery函数通过该选择器获取对应的DOM，然后将这些DOM封装到一个jQuery对象中并返回
+      	2) 参数为DOM对象(即Node的实例) 
+      		jQuery函数将该DOM封装成jQuery对象并返回。
+      	3) 参数为HTML文本字符串
+        	jQuery函数会根据传入的文本创建好HTML元素并封装成jQuery对象返回
+        	$("<div class='one'>one<div>");
+      	4) 参数为一个匿名函数
+	        $(function(){
+		
+			});
+			当文档结构加载完毕之后jQuery函数调用匿名函数
+4. jQuery对象
+	1) jQuery对象是jQuery函数的一个实例，该对象可以调用jQuery原型中的方法,也就是我们后面学的很多方法，比如each,map,slice,first,find,filter,not,on,off,css等方法
+	2) jQuery对象是一个类数组对象，数组中存放的是DOM对象
+	3) jQuery对象的获取通常是使用选择器来获取。
+		比如, 获取所有class为one的元素。
+		$(".one")
+
+5. jQuery对象与DOM对象
+	是两种完全不一样的对象，jQuery对象是jQuery函数的实例，是一个类数组对象，而DOM对象是Node的实例。他们所能调用的方法完全不同。但是它们又有一定的关联性，jQuery对象的类数组的元素为DOM对象，对jQuery对象的操作实际上就是对jQuery数组中DOM对象的批量操作。jQeury对象和DOM对象可以相互转化
+	1) DOM对象转换为jQuery对象
+		var dom = document.getElementById("one");	//DOM对象，也就是Node的一个实例，或者说是HTMLElement的实例
+		var $dom = jQuery(dom);	//将dom对象封装了jQuery对象
+
+		dom.onclick = function(){};		//ok 	为dom元素绑定事件处理函数
+		$dom.onclick = function(){};	//error	不能这样使用，因为jQuery对象没有这个属性
+		$dom.click(function(){});
+	2) jQuery对象转换为DOM对象
+		var $doms = jQuery(".one");	//获取所有class为one的元素，可能有多个，$doms为jQuery对象
+		var dom1 = $doms[0];		//获取封装在jQuery对象中的第一个dom对象，dom1为dom对象
+
+6. jQuery选择器
+	1) 基本选择器
+		所有选择器	*
+		标签选择器	标签名
+   		ID选择器	#ID
+  		类选择器	.className
+   		群组选择器	selector1,selector2 
+   			多个选择器使用,分割，取并集
+   		复合选择器	selector1selector2	
+   			多个选择器组合使用，取交集
+   	2) 层次选择器
+   		后代选择器	selector1 selector2
+   			两个选择器使用空格隔开，表示可以获取当前元素的子代以及孙子代等后代元素
+   		子代选择器	selector1>selector2
+   			两个选择器使用>隔开，表示只能获取当前选中元素的子代元素
+   	3) 兄弟选择器
+   		下一个兄弟选择器	selector1+selector2
+   			两个选择器使用+隔开，表示可以获取当前元素下一个兄弟元素，下一个兄弟元素要能符合selector2
+   		之后所有兄弟选择器 selector1~selector2
+   			两个选择器使用~隔开，表示可以获取当前元素之后的所有兄弟元素，之后所有兄弟元素要能符合selector2
+
+ 7. jQuery过滤器
+ 	【注意】jQuery的过滤器必须用在jQuery选择器后，表示对通过前面的jQuery选择器选择到的内容的过滤。是建立在前面选择器已经选择到元素的基础之上的。
+ 	1) 基本过滤器
+		语法：selector:过滤器
+		selector:first 		获取所有已选择到的元素中的第一个元素
+		selector:last 		获取所有已选择到的元素中的最后一个元素
+		selector:even 		获取所有已选择到的元素中的索引为偶数元素
+		selector:odd 		获取所有已选择到的元素中的索引为奇数元素
+		selector:eq(index) 	获取所有已选择到的元素中的索引为index的元素
+		selector:lt(num)	获取所有已选择到的元素中的索引值小于num的元素
+		selector:gt(num)	获取所有已选择到的元素中的索引值大于num的元素
+		selector1:not(selector2)	获取所有已选择到的元素中的除了selector2的元素
+		selector:header	标题h1~h6	获取所有已选择到的元素中的标题元素
+	2) 内容过滤器
+		语法：selector:过滤器			
+		selector:contains(text);	获取所有已选择到的元素中文本包含text的元素
+		selector:empty				获取所有已选择到的元素中空元素（没有子节点）
+		selector:parent				获取所有已选择到的元素中非空元素（有子节点）
+		$("div:parent")
+		selector:has(selector2)		获取所有已选择到的元素中包含selector2元素的元素
+		$("div:has('span')")
+	3) 可见性过滤器
+		语法：selector:过滤器
+		隐藏类型
+		1. 不占据屏幕空间
+			display:none
+			<input type="hidden">
+			<head></head>
+		2. 占据屏幕空间
+			visibility:hidden
+			透明度 0
+		:visible
+			选择所有占据屏幕空间的元素
+		:hidden
+			选择所有不占据屏幕空间的元素
+	4) 属性过滤器
+		语法：selector[属性过滤器]
+		selector[attrKey]		获取所有已选择到的元素中具有属性attrKey的元素
+		selector[attrKey=attrVal]	获取所有已选择到的元素中具有属性attrKey，并且属性值为attrVal的元素
+		selector[attrKey^=attrVal]	获取所有已选择到的元素中具有属性attrKey，并且属性值为以attrVal开头的元素
+		selector[attrKey$=attrVal]	获取所有已选择到的元素中具有属性attrKey，并且属性值为以attrVal结尾的元素
+		selector[attrKey*=attrVal]	获取所有已选择到的元素中具有属性attrKey，并且属性值为包含attrVal的元素
+		selector[attrKey!=attrVal]	获取所有已选择到的元素中具有属性attrKey，并且属性值不为以attrVal的元素或者没有属性attrKey的元素
+		selector[attrKey1][attrKey2]
+		$("div['class']['title']")
+	5) 后代过滤器
+		选择器一定要先选择到后代元素，是对选择到的后代元素的过滤,【注意】空格与>的区别
+		$("div :nth-child")
+		selector :nth-child(index)	获取每个selector元素中索引为index的子元素【注意】index从1开始
+		selector :first-child		获取每个selector元素中第一个子元素（每个父元素的第一个子元素）
+			注意与selector :first的区别，获取所有selector元素的子元素中的第一个（只有一个）
+		selector :last-child		获取每个selector元素中第最后一个子元素（每个父元素的最后一个子元素）
+		selector :only-child		获取每个selector元素中独生子子元素（每个父元素如果只有一个孩子元素，获取该元素）
+		selector :first-of-type		获取每个selector元素中每种类型子元素中的第一个
+		selector :last-of-type		获取每个selector元素中每种类型子元素中的最后一个
+
+ 	6) 表单过滤器：主要是对选择的表单元素进行过滤。
+      	:enabled		
+			选取所有可用元素该选择器仅可用于选择支持disabled属性（attribute）的HTML元素(<button>, <input>, <optgroup>, <option>, <select>, 和 <textarea>)。
+      	:disabled		
+        	选取所有不可用的元素该选择器也是仅可用于支持disabled属性的HTML元素
+      	:checked		
+        	选取所有被选中的元素，用于复选框和单选框,下拉框
+      	:selected		
+        	选取所有被选中的选项元素，该选择器只适用于<option>元素
+        :focus
+        	选择当前获取焦点的元素。
+      	:input		
+       		选取所有的<input><textarea><select><button>元素
+			$(":input")现在可以让用户输入的标签元素
+			$("input")选择名字为input的标签元素
+      	:text		
+			选取所有的单行文本框（<input type="text">）
+      	:password		
+      		选取所有的密码框
+      	:radio		
+      		选取所有的单选框
+      	:checkbox		
+      		选取所有的多选框
+      	:submit		
+      		选取所有的提交按钮
+      	:image		
+      		选取所有input类型为image的表单元素
+      	:reset		
+      		选取所有input类型为reset的表单元素
+      	:button
+      		选取所有input类型为button的表单元素
+      	:file
+      		选取所有input类型为file的表单元素
+
+1. jQuery中的DOM操作
+	1）查找节点
+      	通过jQuery选择器来完成 
+   	2）创建节点
+        创建元素节点：var newOpt = $("<option value='"+item.id+"'>"+item.className+"</option>");
+		创建文本节点：在创建元素节点时直接把文本内容写出来。var newTd = $("<td>文本内容</td>")
+    3）插入节点：
+		append()	
+	  		在每个匹配元素里面的末尾处插入参数内容。作为它的最后一个子元素。
+	  		参数 一个或多个DOM 元素，DOM元素数组，HTML字符串，或者jQuery对象，用来插在每个匹配元素里面的末尾。
+	  		【注意】如果将页面上一个元素A插入到另一个元素B，元素A会被从老地方移走
+		appendTo(target)	
+	  		颠倒了 $(A).append(B)的效果，$(A).appendTo(B)将A追加到B中，将匹配的元素插入到目标元素的最后面
+		prepend()	
+	  		将参数内容插入到每个匹配元素的前面（元素内部）。也就是当前元素中的第一个子元素
+		prependTo(target)	
+	  		颠倒了 $(A).prepend(B)的效果.
+		after()		
+	  		在匹配元素集合中的每个元素后面插入参数所指定的内容，作为其兄弟节点插在每个匹配元素的后面
+		insertAfter(target)   
+	  		在目标元素后面插入集合中每个匹配的元素(插入的元素作为目标元素的兄弟元素)。颠倒了 $(A).after(B)的效果
+		before()	
+	  		在匹配元素的前面插入内容（外部插入）作为其兄弟节点插在集合中每个匹配元素前面。
+		insertBefore(target) 
+	  		颠倒了 $(A).before(B)的效果
+    4）删除节点
+		remove([selector]) 
+	  		从DOM中删除所有匹配的元素，返回值是一个指向已经被删除的节点的引用，可以在以后再使用这些元素。该方法会移除元素，同时也会移除元素内部的一切，包括绑定的事件及与该元素相关的jQuery数据
+		detach( [selector ] )
+	  		.detach() 方法和.remove()类似, 但是.detach()保存所有jQuery数据和被移走的元素相关联事件。
+	  	empty()  
+			无参数。从DOM中移除集合中匹配元素的所有子节点。
+    5）复制节点
+	  	$("#id").clone(false)
+	  		深复制 
+	  		该方法返回的是一个节点的引用,参数默认为false，clone()方法中传递了一个参数true，含义是复制元素的同时复制元素中所绑定的事件
+    6）替换节点
+		replaceWith(newContent):
+	  		用提供的内容替换集合中所有匹配的元素并且返回被删除元素的集合。该方法会删除与节点相关联的所有数据和事件处理程序 
+	  		参数 用来插入的内容，可能是HTML字符串，DOM元素，或者jQuery对象。
+	  
+		replaeAll(target )  :
+	  		用集合的匹配元素替换每个目标元素。颠倒了replaceWith()操作效果
+      
+    7）包裹节点
+		wrap([wrappingElement]) 
+	  		在每个匹配的元素外层包上一个html元素。
+		wrapAll([wrappingElement]) : 
+	  		将所有匹配的元素用一个元素来包裹，在所有匹配元素外面包一层HTML结构。这种结构可以嵌套多层，但是最内层只能有一个元素。所有匹配元素将会被当作是一个整体，在这个整体的外部用指定的 HTML 结构进行包裹。 
+		wrapInner([wrappingElement]):
+	  		每个匹配元素里面内容(子元素)都会被这种结构包裹。
+    8）节点遍历
+        注意:使用这些方法去解析html文档和xml文档都是可以的,因为html文档和xml文档都可以转换为dom模型.(也就是说在ajax中,如果后台传过来的是xml文档,那么我们使用jquery也可以用下面方法解析)
+		children([selector])	
+			用于取得匹配元素的子元素集合（只考虑子元素而不考虑任何后代元素）
+			$(".content .inner")
+			=>
+			$(".content").children(".inner");
+		find(selector)		
+			在当前元素对象中的子元素中查找，和参数所匹配的所有的后代元素。
+		next([selector])	
+			取得匹配的元素集合中每一个元素紧邻的后面兄弟元素。
+		nextAll([selector])	
+			查找当前元素之后所有的同辈元素。
+		prev([selector])	
+			取得匹配元素前面紧邻的兄弟元素
+		prevAll([selector])	
+			查找当前元素之前所有的同辈元素。
+		siblings([selector])	
+			取得匹配元素前后所有的兄弟元素
+		closest( selector)	
+			取得和参数匹配的最近的元素，如果匹配不上继续向上查找父元素
+		filter(selector)	
+			把当前所选择的所有元素再进行筛选过滤
+		parent([selector])	
+			取得匹配元素集合中，每个元素的父元素
+		parents([selector])	
+			获得集合中每个匹配元素的祖先元素，
+3. 事件
+  	1.bind(eventType[,eventData ],handler(eventObject) )  
+		eventType:事件类型 ，字符串 'click' 'submit'多个事件类型可以通过用空格隔开一次性绑定'click submit'
+		eventData:事件数据，一个对象
+		handler	 :事件处理函数
+		eventObject： 事件对象
+			currentTarget 在事件冒泡过程中的当前DOM元素。
+			target	触发事件的DOM元素。
+			preventDefault()阻止默认事件行为
+			stopPropagation()防止事件冒泡到DOM树上
+			type	描述事件的性质。
+			data	传递给一个事件方法的数据对象
+			metaKey	表示事件触发时哪个Meta键被按下
+			pageX	鼠标相对于文档的左边缘的位置
+			pageY	鼠标相对于文档的顶部边缘的位置
+			
+    	bind(events) events	 :一个对象,key为事件类型，val为事件处理函数
+			events = {
+			  click: function() {},
+			  mouseenter: function() {}
+			}
+  	2. unbind([eventType][,handler(eventObject)])
+     	从元素上删除一个以前附加事件处理程序。
+       	无参时 .unbind() 将移除元素上所有绑定的处理程序。
+       	参数为某事件类型时，移除该事件类型上的所有绑定的处理程序
+       	参数为事件类型,事件处理函数，移除该事件类型上绑定的该处理函数
+
+  	3.on( events[,selector][,data],handler(eventObject))
+     	在选定的元素上绑定一个或多个事件处理函数。
+     	selector:一个选择器字符串，用于过滤出被选中的元素中能触发事件的后代元素。如果选择器是 null 或者忽略了该选择器，那么被选中的元素总是能触发事件。
+  	4.off( events [, selector ] [, handler ] )
+      	移除一个事件处理函数。
+ 	5.trigger( eventType[,extraParameters])
+      	根据绑定到匹配元素的给定的事件类型执行所有的处理程序和行为。extraParameters 传递给事件处理程序的额外参数。为数组类型
+
+      	向事件中传入任意的数据：
+		$("p")
+		.click( function (event, a, b) {})
+		.trigger("click", ["foo", "bar"]);
+
+	6. 其他事件方法
+		鼠标事件
+			click()
+			dblclick()
+			focusin()
+			focusout()
+			hover()
+			mousedown()
+			mouseup()
+			mouseenter()
+			mouseleave()
+			mouseout()
+			mouseover();
+			mousemove()
+		键盘事件:
+			keypress()
+			keyup()
+			keydown()
+		表单事件:
+			blur()
+			change()
+			focus()
+			select()
+			submit()
+2. jQuery中常用API
+    1）jQuery中的html() text() val() 方法
+		val([value])用来读取或修改【表单元素】的value属性的值。
+	    参数：
+	      	无参 获取value值
+	      	参数 value，设置value的值
+	      	参数 function(index,oldVal) 回调函数，index索引，oldVal当前val
+		html([html])用为读取和修改元素的HTML标签
+	    参数：
+	    	无参 获取html的值
+	      	参数 html，设置html的值
+	      	参数 function(index,oldhtml) 回调函数，index索引，oldhtml当前html
+		text([text])用来读取或修改元素的纯文本内容
+	    参数：
+	    	无参 获取文本值
+	      	参数 text，设置文本值
+	      	参数 function(index,oldText) 回调函数，index索引，oldText当前text
+
+    2）jQuery中的工具方法
+		get()
+	    	无参 调用这个方法将会返回所有匹配的DOM节点，这些节点包含在一个标准的数组中
+	    	参数 index: 索引，从0开始计数，用来确定获取索引指定元素。如果index的值超出范围 小于元素数量的负数或等于或大于元素的数量 - 那么它将返回undefined
+		 toArray() 
+        	无参 返回一个包含jQuery对象集合中的所有DOM元素的数组。
+		eq(index)
+	  		参数 	index,用于指示元素的索引，当为负数时从集合中的最后一个元素开始倒数
+	  		返回值	jQuery对象
+		filter() 过滤器函数
+	  		参数 选择器字符串
+	    	参数 function(index){} 匿名函数，如果函数返回true ，该元素将被包含在筛选集合中;
+	  		返回值 : jQuery对象
+		  
+		map() 该方法特别适用于获取或设置元素集合中的值
+	  		参数 function(index,item){}回调函数
+
+	    	例如
+	    		可以得到一个用逗号分隔的复选框 ID:
+				$(':checkbox').map(function() {
+				      return this.id;
+				}).get().join();
+		each() 遍历一个jQuery对象，为每个匹配元素执行一个函数。
+	  		参数 function(index, Element) 
+		first() 获取匹配元素集合中第一个元素。无参数
+		last() 	获取匹配元素集合中最后一个元素。无参数
+		has() 	筛选匹配元素集合中的那些有相匹配的选择器或DOM元素的后代元素
+		is()	判断当前匹配的元素集合中的元素，是否为一个选择器，DOM元素，或者jQuery对象，如果这些元素至少一个匹配给定的参数，那么返回true。
+	  		返回值 ： boolean类型
+		not() 从匹配的元素集合中移除指定的元素。
+		slice()根据指定的下标范围，过滤匹配的元素集合，并生成一个新的 jQuery 对象。
+	  		参数(start [, end ])
+	    	start整数，从0开始计数的下标。代表将要被选择的元素的起始下标。如果指定的下标是一个负数，那么代表从末尾开始计数。
+	    	end整数，从 0 开始计数的下标。代表将要被选择的元素的结束下标。如果指定的下标是一个负数，那么代表从末尾开始计数。如果忽略此参数，则选择的范围是从 start 开始，一直到最后。
+
+    3）jQuery中属性设置函数
+        	attr( key|key,val|{key:val,key2:val2} )
+	  		获取匹配的元素集合中的第一个元素的属性的值或设置每一个匹配元素的一个或多个属性。
+		prop( key|key,val|{key:val,key2:val2} )  
+	  		获取匹配的元素集中第一个元素的属性值或设置每一个匹配元素的一个或多个属性,常用于单值属性。
+		removeAttr( attributeName )
+	  		为匹配的元素集合中的每个元素中移除一个属性（attribute）。
+		removeProp( propertyName )
+	  		为集合中匹配的元素删除一个属性（property）。一般来说,只需要移除自定义的属性
+	  	css( key|key,val|{key:val,key2:val2} )
+	  		获取匹配元素集合中的第一个元素的样式属性的计算值 或设置每个匹配元素的一个或多个CSS属性。
+		addClass( className )
+	  		为每个匹配的元素添加指定的样式类名
+		hasClass( className )
+	  		确定任何一个匹配元素是否有被分配给定的（样式）类。
+		removeClass([className ])
+	  		移除集合中每个匹配元素上一个，多个或全部样式。
+
+AngularJS
+	js  思想  MVC
+	Java
+
+HTML+CSS+JS
+--------------------------
+web服务器=>AJAX
+
+服务器 主机+服务器
+
+服务器软件：安装在主机上的一个共享软件
+
+	静态服务器	apache(c语言)
+		bin
+			可执行文件
+		conf
+			配置文件
+		htdoc
+			服务器目录
+		...
+
+		静态资源
+			.css
+			.js
+			.html
+	动态服务器	tomcat(java语言)
+		bin
+		conf
+		webapps 
+		动态资源+静态资源
+			.jsp
+			.jsp->.java->.class->执行过程中输出html
+
+	学生信息管理系统(分布式)
+		页面(html+css+js)
+		服务,接口（JavaEE）
+		apache  静态页面
+			|
+			|  json
+			|
+		tomcat  服务
+
+	数据维护
+	html--(json)-->Java--(JDBC)-->Database
+			ajax
+
+
+后台开发者
+	Servlet 从数据库中查询数据，并且将查询的数据转换json传递给我们，通过http协议传递
+
+	接口(服务)：
+	获取所有学生信息（ajax-json; jsonp=callback）
+	http://127.0.0.1:8080/sms/queryStudent
+		参数：
+			id:1001
+			clazzId:1601
+			gender:"男"
+
+
+	接口(服务)：
+	获取所有学生信息（ajax-json; jsonp=callback）
+	http://127.0.0.1:8080/sms/getAllStudent_json.controller
+
+	接口(服务)：
+	获取所有学生信息（ajax-xml; jsonp=callback）
+	http://127.0.0.1:8080/sms/getAllStudent_xml
+	
+
+	接口(服务)：
+	获取所有学生信息（ajax-jsonp; jsonp=callback）
+	http://127.0.0.1:8080/sms/getAllStudent
+	数据格式：
+		[{
+			id:1001,
+			name:"terry"
+			age:12,
+			gender:"男"
+		}]
+	示例：
+	http://127.0.0.1:8080/sms/getAllStudent?jsonp=foo
+
+	foo回调函数名
+
+前端开发者
+	html 
+		数据（ajax---请求接口/服务）
+
+	$.ajax("http://127.0.0.1:8080/sms/queryStudent",{
+		method:"POST",
+		dataType:"json",
+		data:{
+			gender:"男",
+			clazzId:"1601"
+		},
+		success:funciton(data){
+
+		}
+
+	});
+
+前端开发者的独自开发
+	域：  域名  briup.com --  baidu.com
+	Ip:		   192.16.2.3    163.2.3.4
+	1. 不存在跨域的情况（模拟数据与页面在同一域）
+		web1601
+			js
+			css
+			data
+				student.json
+				[{},{}]
+			index.html
+				$.ajax("http://127.0.0.1:80/web1601/data/stuent.json"){
+
+				}
+		访问方式：
+			http://127.0.0.1/web1601/index.html
+	2. 跨域情况
+		web1601
+			js
+			css
+			data
+				student.json
+				[{},{}]
+			index.html
+				$.ajax("http://172.16.20.87:80/web1601/data/stuent.json"){
+
+				}
+		访问方式：
+			http://127.0.0.1/web1601/index.html
+
+1.jQuery-- ajax
+	$.ajax(url,{
+		async:true,
+		method:"GET",
+		dataType:"text",//json jsonp xml html javascript
+		data:{
+
+		},
+		jsonp:"",
+		jsonpCallback:"",
+		success:function(){
+
+		},
+		erro:function(){
+
+		}
+	});
+
+	简写
+	1.$.get(url,data,fun(cdata),dataType);
+	2.$.getJSON(url,data,fun(cdata));
+	3.$.post(url,data,fun(cdata),dataType);
+	特殊
+	4.$obj.load();
+	//将student.html的代码片段加载入$("#content")中
+		$("#content").load("student.html",data,fun(cdata));
+	
+jQuery中的ajax
+1.底层接口
+    1)jQuery.ajax(url[,settings]); 执行一个异步的HTTP(Ajax)的请求
+    	url	：一个用来包含发送请求的URL字符串
+		settings：以"{键:值}"组成的AJAX请求设置。所有选项都是可选的
+	  		async	: 是否异步请求，默认为true。
+	  		cache	: 默认为true,表示浏览器缓存此页面。设置为false将不缓存
+	  		data	: 发送到服务器的数据。将自动转换为请求字符串格式。数据必须为"{键:值}"格式
+	  		method: 默认为'GET' 。HTTP 请求方法 (比如："POST", "GET ", "PUT")
+
+	 	 	dataType:从服务器返回你期望的数据类型。 
+				"json" 把响应的结果当作 JSON 执行，并返回一个JavaScript对象。JSON 数据以严格的方式解析; 任何畸形的JSON将被拒绝，并且抛出解析错误信息。在jQuery1.9中，一个空响应也将被拒绝;服务器应该返回null或 {}响应代替。
+				"xml"  返回 XML 文档，可以通过 jQuery 处理。
+				"html" 返回纯文本 HTML 文本；包含的script标签会在插入DOM时执行。
+				"script" 把响应的结果当作 JavaScript 执行，并将其当作纯文本返回。
+				"text" 返回纯文本字符串。
+	  		timeout	: 设置请求超时时间（毫秒）。
+	  		beforeSend	: 请求发送前的回调函数。返回false将取消这个请求。
+	  		complete	: 请求完成后的回调函数(请求success,error之后均调用)该选项可以接受一个函数数组，每个函数将被依次调用。
+	  		error		: 请求失败时调用此函数
+	  		success: 请求成功后的回调函数。可以接受一个函数数组。每个函数将被依次调用。
+	  		statusCode: (默认: {})
+				一组数值的HTTP代码和函数对象，当响应时调用了相应的代码。
+				$.ajax({
+				  statusCode: {
+				    404: function() {
+				      alert("page not found");
+				    }
+				  }
+				});
+    2)jQuery.ajaxSetup( options )为以后要用到的Ajax请求设置默认的值(不建议使用)
+        options 用于设置$.ajaxSetup()的详细参数, 如上
+		$.ajaxSetup({
+		  url: 'ping.php',
+		  method:'GET',
+		  async:true
+		  ......
+		});
+       
+2. Ajax快捷函数
+    jQuery 发送的所有 Ajax 请求，内部都会通过调用 $.ajax() 函数来实现。通常没有必要直接调用这个函数，可以使用几个已经封装的简便方法，
+    1) jQuery.get(url[,data][,success(data,textStatus,jqXHR)][,dataType])
+       	使用一个HTTP GET请求从服务器加载数据。这是一个Ajax功能的缩写，这相当于:
+       	$.ajax({
+	  		url: url,
+	  		data: data,
+	  		success: success,
+	  		dataType: dataType
+       	});
+    2)jQuery.post(url[,data][,success(data,textStatus,jqXHR)][,dataType])
+       	使用一个HTTP POST 请求从服务器加载数据。 这是一个 Ajax 函数的简写形式，这相当于：
+       	$.ajax({
+	  		type: "POST",
+	  		url: url,
+	  		data: data,
+	  		success: success,
+	  		dataType: dataType
+       	});
+    3)jQuery.getJSON(url[,data][,success(data,textStatus,jqXHR)])
+       	使用一个HTTP GET请求从服务器加载JSON编码的数据。这是一个Ajax函数的缩写，这相当于:
+       	$.ajax({
+	  		dataType: "json",
+	  		url: url,
+	  		data: data,
+	  		success: success
+       	});
+    4)$dom.load(url[,data][,complete(responseText,textStatus,XMLHttpRequest)])
+		从服务器载入数据并且将返回的HTML代码并插入至匹配的元素中。
+		如果 url 参数的字符串中包含一个或多个空格，那么第一个空格后面的内容，会被当成是 jQuery 的选择器，从而决定应该加载返回结果中的哪部分内容。$('#result').load('ajax/test.html #container');//载入test.html中的 $("#container")
+
+3.jqXHR(jQuery XHR对象)
+jQueryXMLHttpRequest
+XMLHttpRequest
+    	从jQuery 1.5开始，所有jQuery的Ajax方法都返回一个XMLHTTPRequest对象的超集。
+    	jqXHR.done(function(data,textStatus,jqXHR) { }) 
+			表示ajax调用成功,.done()方法代替了这个建议弃用的jqXHR.success()方法
+    	jqXHR.fail(function(jqXHR,textStatus,errorThrown) { }) 
+			表示ajax调用错误,.fail()方法替代了这个建议弃用的.error()方法。请参阅deferred.fail()以了解编译器详情。
+    	jqXHR.always(function(data|jqXHR,textStatus,jqXHR|errorThrown) { }) 
+			表示ajax完成, 无论是成功或错误,该方法接受一个函数参数，用来请求终止时被调用。.always()方法替代了建议弃用的.complete()方法。
+
+		为了与XMLHttpRequest向后兼容，一个jqXHR对象会显露出以下的属性和方法：
+			readyState
+			status
+			statusText
+			responseXML和/或responseText，分别是在底层请求用xml和/或text响应时
+			setRequestHeader(name, value)它与标准不同，通过用新值代替旧值，而不是把新值串联到旧值后面
+			getAllResponseHeaders()
+			getResponseHeader()
+			statusCode()
+			abort()
+
+4. 全局Ajax事件处理
+		$dom.ajaxComplete()
+			注册一个处理函数，在Ajax请求结束时调用它。这是一个Ajax事件。
+		$dom.ajaxError()
+			注册一个处理函数，在Ajax请求以出错告终时调用它。这是一个Ajax事件。
+		$dom.ajaxSend()
+			附加一个函数，在一个Ajax请求发送之前执行它。这是一个Ajax事件。
+		$dom.ajaxStart()
+			注册一个处理函数，当第一个Ajax请求开始之前调用它。这是一个Ajax事件。
+		$dom.ajaxStop()
+			注册一个处理函数，当所有的Ajax请求都结束时调用它。这是一个Ajax事件。
+		$dom.ajaxSuccess()
+			附加一个函数，当一个Ajax请求成功地结束时执行它。这是一个Ajax事件。
+
+
+
+
+
+jQuery动画效果
+1. jQuery样式相关方法
+	宽度 = width + 2padding+2border+2margin
+    .height()
+    	获取匹配元素集合中的第一个元素的当前计算高度值。
+    	.css('height') 和 .height()之间的区别是后者返回一个没有单位的数值（例如，400），前者是返回带有完整单位的字符串（例如，400px）。当一个元素的高度需要数学计算的时候推荐使用.height() 方法 。
+    	// Returns height of browser viewport
+		$( window ).height();
+		// Returns height of HTML document
+		$( document ).height();
+	.width()
+    	为匹配的元素集合中获取第一个元素的当前计算宽度值或给每个匹配的元素设置宽度。 
+
+    .innerHeight()
+    	用于获得匹配集合中第一个元素的当前计算的内部高度（包括padding，但不包括border），或 设置每一个匹配元素的内部高度。
+    	这个方法不适用于window 和 document对象，对于这些对象可以使用.height()代替。
+    .innerWidth()
+    	用于获得匹配集合中第一个元素的当前计算的内部宽度（包括padding，但不包括border），或 设置每一个匹配元素的内部宽度。
+    	这个方法不适用于window 和 document对象，对于这些对象可以使用.width()代替。
+
+    .outerHeight()
+    	获取匹配元素集合中第一个元素的当前计算宽度值,包括padding，border和选择性的margin。返回一个整数（不包含“px”）表示的值 ，或如果在一个空集合上调用该方法，则会返回 null。 
+    	这个方法不适用于window 和 document对象，可以使用.height()代替。 
+    .outerWidth()
+    	获取元素集合中第一个元素的当前计算宽度值,包括padding，border和选择性的margin。（愚人码头注：返回一个整数（不包含“px”）表示的值，或如果在一个空集合上调用该方法，则会返回 null。）
+    	这个方法不适用于window 和 document对象，可以使用.width()代替。虽然.outerWidth()可以在表格元素上使用， 使用 border-collapse: collapseCSS属性可能会产生意外结果。
+
+    .offset()
+   	 	在匹配的元素集合中，获取的第一个元素的当前坐标，或设置每一个元素的坐标，坐标相对于文档。
+   	 	.offset()方法允许我们检索一个元素相对于文档（document）的当前位置。和.position()的差别在于：.position()是相对于相对于父级元素的位移。当通过全局操作（特别是通过拖拽操作）将一个新的元素放置到另一个已经存在的元素的上面时，若要取得这个新的元素的位置，那么使用 .offset() 更合适。
+		.offset()返回一个包含top 和 left属性的对象 。
+    .position()
+    	.position()方法可以取得元素相对于父元素的偏移位置。与.offset()不同, .offset()是获得该元素相对于documet的当前坐标 当把一个新元素放在同一个容器里面另一个元素附近时，用.position()更好用。
+    	.position()返回一个包含 top 和 left属性的对象.
+
+    .scrollLeft()
+    	获取匹配的元素集合中第一个元素的当前水平滚动条的位置或设置每个匹配元素的水平滚动条位置。
+    .scrollTop()	
+    	获取匹配的元素集合中第一个元素的当前垂直滚动条的位置或设置每个匹配元素的垂直滚动条位置。
+
+    .offsetParent()
+    	取得离指定元素最近的含有定位信息的祖先元素。含有定位信息的元素指的是，CSS 的 position 属性是 relative, absolute, 或 fixed 的元素。
+    
+2. 基本效果
+	1) 隐藏
+		$obj.hide()
+		$obj.hide( [duration ][, complete ] )
+
+			如果没有提供参数,被匹配的元素将不带动画地立即隐藏。这大致地等同于.css( "display", "none" )，如果一个元素的display值是inline，然后隐藏，再显示它，它依然会显示为display:inline。
+
+			如果提供了一个duration，或者提供了一个complete回调函数，.hide()方法就变成了一个动画方法。.hide()方法同时地变动了匹配的元素宽度、高度以及不透明度。当这些值到达0时，display样式属性会被设置为none以确保元素不会影响网页的布局。
+
+			duration 持续时间
+				默认值：400毫秒
+				用毫秒数指定:更大的数字表示更慢的动画，而不是更快的动画。
+				'fast'表示200毫秒的持续时间
+				'normal'
+				'slow'表示800毫秒的持续时间
+			complete
+				一个函数，在动画一旦结束时调用它，对每个匹配的元素调用一次。
+	2) 显示
+		$obj.show()
+		$obj.show( [duration ] [, complete ] )
+		用于与hide类似
+
+	3) 隐藏与显示
+		$obj.toggle( [duration ] [, complete ] )
+		$obj.toggle( display )
+			display
+			类型：Boolean
+			使用true显示元素，使用false隐藏元素
+
+3. 淡入淡出效果
+	1) 淡入
+		$obj.fadeIn( [duration ] [, complete ] )
+		通过把匹配的元素渐显为不透明，来显示匹配的元素。该方法变动了匹配的元素的不透明度。它近似于.fadeTo()方法，但是那个方法没有取消隐藏元素，并可以指定最终的不透明程度
+	2) 淡出
+		$obj.fadeOut([duration ] [, complete ] )
+		方法变动了匹配的元素的不透明度。一旦不透明度到达0，样式属性display会被设置为none，因此元素不再影响网页的布局。
+
+	3) 淡入到
+		$obj.fadeTo( duration, opacity [, complete ] )
+		调整匹配的元素的不透明度。
+			opacity	一个0到1之间的数字，表示目标不透明度。
+
+	4) 淡入与淡出
+		$obj.fadeToggle( [duration ] [, complete ] )
+		通过变动匹配的元素的不透明度，来显示或隐藏匹配的元素。
+
+4. 滑动效果
+	1) 滑下
+		$obj.slideDown( [duration ] [, complete ] )
+		用滑移动作显示匹配的元素。
+
+	2) 滑上
+		$obj.slideUp( [duration ] [, complete ] )
+		用一个滑移动作隐藏匹配的元素。
+
+	3) 滑上与滑下
+		$obj.slideToggle( [duration ] [, complete ] )
+		用一个滑移动作显示或者隐藏匹配的元素。
+
+5. 自定义效果
+	1) animate()
+		animate( properties [, duration ] [, complete ] )
+		properties
+			一个CSS属性和值的对象，动画将根据这组对象移动。
+			1) 所有变动的属性必须变动到一个单一数字值(width,height,left)
+			2) 除了样式属性，有些非样式属性，比如说scrollTop和scrollLeft，以及自定义属性，也可以变动
+			3) 如果一个值的前面加了+=或者-=这些字符，则目标值会根据属性的当前值累加或连减给定的数字计算出来。
+	2) .stop()
+		停止匹配元素当前正在运行的动画。
+		.stop( [clearQueue ] [, jumpToEnd ] )
+		当一个元素调用.stop()，当前正在运行的动画（如果有的话）立即停止。如果，例如，一个元素用.slideUp()隐藏的时候，调用.stop()，该元素依然会有一部分是处于显示状态的。由于元素上的动画尚未执行完成，所以动画完成时执行的回调函数是不会被调用的。
+
+		clearQueue参数值为true时,那么在队列中的动画其余被删除并永远不会运行。
+		jumpToEnd参数值为true时,当前动画将停止，但该元素上的 CSS 属性会被立刻修改成动画的目标值。
+
+		//点击 slideToggle 按钮，会开始动画。然后在动画结束前再次点击该按钮，此时，会立刻从当前位置向反方向开始动画
+		$('#toggle').on('click', function() {
+		    $block.stop().slideToggle(1000);
+		});
+	3) .finish()
+		.finish()方法和.stop(true, true)很相似，.stop(true, true)将清除队列，并且目前的动画跳转到其最终值。但是，不同的是，.finish() 会导致所有排队的动画的CSS属性跳转到他们的最终值。
+
+	4) .queue()
+		显示或操作匹配的元素上已经执行的函数列队。
+		.queue([queueName ])
+			queueName:一个含有队列名的字符串。默认是 fx，标准的动画队列。
+
+			//获取定义在div上的动画队列
+			var n = div.queue("fx");
+	5) .delay()
+		设置一个延时来推迟执行队列中后续的项。
+		.delay( duration )
+		只有队列中连续的事件会延迟; 例如，不带参数的 .show() 或者 .hide()不会延迟，因为他们没有使用效果队列 
+
+			//div1,div2同时滑上，div1延迟800毫秒再淡入
+		    $("button").click(function() {
+		      $("div.first").slideUp(300).delay(800).fadeIn(400);
+		      $("div.second").slideUp(300).fadeIn(400);
+		    });
+
+	6) .clearQueue()
+		=> stop(true);
+		从列队中移除所有未执行的项。
+		当.clearQueue()方法被访问的时候，所有在这个列队中未执行的函数将被移除 。当不使用参数的时候，.clearQueue()会从标准的动画队列fx中移除剩下的函数。这个方法类似.stop(true)。然而.stop()方法只适用在动画中。.clearQueue()还可以用来移除用.queue()方法添加到普通jQuery列表的任何函数。 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
